@@ -1,0 +1,48 @@
+package com.onedelay.boostcampassignment.view
+
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import com.onedelay.boostcampassignment.R
+import com.onedelay.boostcampassignment.utils.Constants
+import kotlinx.android.synthetic.main.activity_web_view.*
+
+class WebViewActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_web_view)
+
+        setSupportActionBar(toolbar)
+
+        button_home.setOnClickListener {
+            onBackPressed()
+        }
+
+        setupWebView(intent.getStringExtra(Constants.URL))
+    }
+
+    private fun setupWebView(url: String) {
+        webView.webViewClient = WebViewClient()
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                web_view_load_progress_bar.progress = newProgress
+                if (newProgress < 100) {
+                    web_view_load_progress_bar.visibility = View.VISIBLE
+                } else {
+                    web_view_load_progress_bar.visibility = View.GONE
+                }
+            }
+        }
+
+        // https://developer.android.com/training/articles/security-tips#WebView
+        webView.settings.javaScriptEnabled = true
+
+        webView.loadUrl(url)
+
+        WebView.setWebContentsDebuggingEnabled(true)
+    }
+}
