@@ -9,11 +9,19 @@ android {
         applicationId "com.onedelay.boostcampassignment"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode buildVersionCode()
+        versionName buildVersionName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+        qa {
+            applicationIdSuffix ".qa"
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -21,6 +29,11 @@ android {
     }
     dataBinding {
         enabled = true
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "app-movie-${movieVersion}.apk"
+        }
     }
 }
 
