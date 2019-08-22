@@ -13,18 +13,18 @@ import com.onedelay.boostcampassignment.model.RetrofitApi
 import com.onedelay.boostcampassignment.utils.Constants
 import com.onedelay.boostcampassignment.utils.DividerItemDecoration
 import com.onedelay.boostcampassignment.utils.Utils
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 
-class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener {
+internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener {
     private var adapter: MovieAdapter? = null
     private var count = 0
     private var total = 0
     private var search = "" // 이전 검색어
 
-    private var subscription = CompositeSubscription()
+    private var disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +37,17 @@ class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
+    }
+
     private fun requestButton() {
         // 이미 검색한 검색어는 검색 안함
-        if (search != editText.text.toString()) {
+        if(search != editText.text.toString()) {
             search = editText.text.toString()
-            if (Utils.isNetworkConnected(this)) {
-                if (search.isNotEmpty()) {
+            if(Utils.isNetworkConnected(this)) {
+                if(search.isNotEmpty()) {
                     editText.onEditorAction(EditorInfo.IME_ACTION_DONE)
                     adapter?.clearItems()
                     requestMovies(1)
@@ -57,48 +62,52 @@ class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener {
 
     private fun initViews() {
         adapter = MovieAdapter(this)
-        recyclerView.layoutManager = LinearLayoutManager(baseContext)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(DividerItemDecoration(this))
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(baseContext)
+            setHasFixedSize(true)
+            adapter = this@MainActivity.adapter
+            addItemDecoration(DividerItemDecoration(this@MainActivity))
+        }
     }
 
     override fun onLoadMoreMovieList(position: Int) {
         // 마지막에 받은 데이터가 10개 이상이고
         // start 요청쿼리(position)가 total 을 넘어설 경우 서버에서 짤라서 보내주는것 방지
-        if (total > position) requestMovies(position)
+        if(total > position) {
+            requestMovies(position)
+        }
     }
 
     override fun onMovieItemClick(item: MovieItem) {
-        val intent = Intent(this@MainActivity, WebViewActivity::class.java)
-        intent.putExtra(Constants.URL, item.link)
+        val intent = Intent(this@MainActivity, WebViewActivity::class.java).apply {
+            putExtra(Constants.URL, item.link)
+        }
         startActivity(intent)
     }
 
     private fun requestMovies(position: Int) {
-        if (position == 1) progressBar.visibility = View.VISIBLE
+        if(position == 1) {
+            progressBar.visibility = View.VISIBLE
+        }
 
-        RetrofitApi.service.requestMovieInfo(search, position)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {
-                            adapter!!.addItems(it.items)
-                            count = it.items.size
-                            total = it.total
-                            progressBar.visibility = View.GONE
+        disposable.add(
+                RetrofitApi.service.requestMovieInfo(search, position)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            {
+                                adapter?.addItems(it.items)
+                                count = it.items.size
+                                total = it.total
+                                progressBar.visibility = View.GONE
 
-                            tv_content.visibility = if (count == 0) View.VISIBLE else View.GONE
-                        },
-                        {
-                            it.printStackTrace()
-                            progressBar.visibility = View.GONE
-                        }
-                ).apply { subscription.add(this) }
+                                tv_content.visibility = if (count == 0) View.VISIBLE else View.GONE
+                            },
+                            {
+                                it.printStackTrace()
+                                progressBar.visibility = View.GONE
+                            }
+                ))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        subscription.clear()
-    }
 }

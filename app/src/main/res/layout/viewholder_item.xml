@@ -1,91 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="item"
-            type="com.onedelay.boostcampassignment.model.MovieItem" />
+  <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="?attr/selectableItemBackground"
+    android:onClick="@{() -> listener.onMovieItemClick(item)}">
 
-        <variable
-            name="listener"
-            type="com.onedelay.boostcampassignment.view.MovieAdapter.OnMovieListener" />
-    </data>
+    <ImageView
+      android:id="@+id/thumb"
+      android:layout_width="100dp"
+      android:layout_height="150dp"
+      android:image="@{item.image}"
+      android:scaleType="centerCrop"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:src="@mipmap/ic_launcher" />
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:onClick="@{() -> listener.onMovieItemClick(item)}"
-        android:padding="10dp">
+    <RatingBar
+      android:id="@+id/ratingBar"
+      style="?android:attr/ratingBarStyleSmall"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:rating="@{Float.parseFloat(item.userRating) / 2F}"
+      app:layout_constraintStart_toStartOf="@id/tv_title"
+      app:layout_constraintTop_toBottomOf="@id/tv_title"
+      tools:rating="5" />
 
-        <ImageView
-            android:id="@+id/thumb"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:image="@{item.image}"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@mipmap/ic_launcher" />
+    <TextView
+      android:id="@+id/tv_title"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="10dp"
+      android:html="@{item.title}"
+      android:textSize="16sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/thumb"
+      app:layout_constraintTop_toTopOf="@id/thumb"
+      tools:text="영화 타이틀 : 룰루랄라" />
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:html="@{item.title}"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/thumb"
-            app:layout_constraintTop_toTopOf="@id/thumb"
-            tools:text="영화 타이틀 : 룰루랄라" />
+    <TextView
+      android:id="@+id/tv_date"
+      android:textStyle="bold"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:text="@{item.pubDate}"
+      app:layout_constraintStart_toStartOf="@id/tv_title"
+      app:layout_constraintTop_toBottomOf="@id/ratingBar"
+      tools:text="2019" />
 
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:rating="@{Float.parseFloat(item.userRating) / 2F}"
-            app:layout_constraintStart_toStartOf="@id/tv_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:rating="5" />
+    <TextView
+      android:id="@+id/tv_director"
+      android:textStyle="bold"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:text="@{item.director}"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="@id/tv_title"
+      app:layout_constraintTop_toBottomOf="@id/tv_date"
+      tools:text="사이먼 킨버그" />
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@{item.pubDate}"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tv_title"
-            app:layout_constraintTop_toBottomOf="@id/ratingBar"
-            tools:text="2019" />
+    <TextView
+      android:id="@+id/tv_actor"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:text="@{item.actor}"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="@id/tv_title"
+      app:layout_constraintTop_toBottomOf="@id/tv_director"
+      tools:text="소피터너, 제니퍼 로렌스, 제임스 맥어보이, 타이 쉐리던, 마이클 패스벤더" />
 
-        <TextView
-            android:id="@+id/tv_director"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@{item.director}"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/tv_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_date"
-            tools:text="사이먼 킨버그" />
+  </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/tv_actor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@{item.actor}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/tv_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_director"
-            tools:text="소피터너, 제니퍼 로렌스, 제임스 맥어보이, 타이 쉐리던, 마이클 패스벤더" />
+  <data>
+    <variable
+      name="item"
+      type="com.onedelay.boostcampassignment.model.MovieItem" />
 
-    </android.support.constraint.ConstraintLayout>
+    <variable
+      name="listener"
+      type="com.onedelay.boostcampassignment.view.MovieAdapter.OnMovieListener" />
+  </data>
 </layout>

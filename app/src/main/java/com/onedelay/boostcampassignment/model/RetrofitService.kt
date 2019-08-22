@@ -1,9 +1,10 @@
 package com.onedelay.boostcampassignment.model
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
-import rx.Observable
 
 interface RetrofitService {
     // Http 헤더에 넣는 정보가 RetrofitService에 코드로 박혀있음.
