@@ -43,7 +43,6 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
     }
 
     private fun requestButton() {
-        // 이미 검색한 검색어는 검색 안함
         if(search != editText.text.toString()) {
             search = editText.text.toString()
             if(Utils.isNetworkConnected(this)) {
@@ -71,8 +70,6 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
     }
 
     override fun onLoadMoreMovieList(position: Int) {
-        // 마지막에 받은 데이터가 10개 이상이고
-        // start 요청쿼리(position)가 total 을 넘어설 경우 서버에서 짤라서 보내주는것 방지
         if(total > position) {
             requestMovies(position)
         }
