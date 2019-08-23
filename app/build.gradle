@@ -27,18 +27,27 @@ android {
 
     buildTypes {
         debug {
+            ext.crashlyticsApiSecret = "910a9d26a1787968a51305361d499e6109b998cfdd138faa23b052cb44dc46a8"
+            ext.betaDistributionGroupAliases = "wjy"
+
             applicationIdSuffix ".debug"
             debuggable true
             signingConfig signingConfigs.ide
         }
 
         qa {
+            ext.crashlyticsApiSecret = "ee8c7deb0772ec03f3dad867ee88478bc0d14964b0ff214059f98814b5229f96"
+            ext.betaDistributionGroupAliases = "wjy"
+
             applicationIdSuffix ".qa"
             debuggable true
             signingConfig signingConfigs.ide
         }
 
         release {
+            ext.crashlyticsApiSecret = "7dc937f96eb44e317da7c2c2679486dc9731bd65e6fac5dcf3da94bee8f80b1b"
+            ext.betaDistributionGroupAliases = "wjy"
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.ide
@@ -92,4 +101,22 @@ dependencies {
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
+}
+
+import com.crashlytics.tools.utils.PropertiesUtils
+
+//https://gist.github.com/alexsinger/2b5b1b7ae2d2fca1ffdb
+File crashlyticsProperties = new File("${project.projectDir.absolutePath}/fabric.properties")
+android.applicationVariants.all { variant ->
+    def variantSuffix = variant.name.capitalize()
+    def generateResourcesTask = project.tasks.getByName("fabricGenerateResources${variantSuffix}")
+    def generatePropertiesTask = task("fabricGenerateProperties${variantSuffix}") {
+        doLast {
+            Properties properties = new Properties()
+            println "...copying apiSecret for ${variant.name}"
+            properties.put("apiSecret", variant.buildType.ext.crashlyticsApiSecret)
+            PropertiesUtils.injectPropertyInFile(crashlyticsProperties, properties, "")
+        }
+    }
+    generateResourcesTask.dependsOn generatePropertiesTask
 }
