@@ -2,9 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "com.onedelay.boostcampassignment"
         minSdkVersion 24
@@ -13,23 +15,40 @@ android {
         versionName buildVersionName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        ide {
+            storeFile       file('../keystores/movie.keystore')
+            storePassword   keystore_pass
+            keyAlias        key_alias
+            keyPassword     key_pass
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
             debuggable true
+            signingConfig signingConfigs.ide
         }
+
         qa {
             applicationIdSuffix ".qa"
             debuggable true
+            signingConfig signingConfigs.ide
         }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.ide
         }
     }
+
     dataBinding {
         enabled = true
     }
+
     applicationVariants.all { variant ->
         variant.outputs.all {
             outputFileName = "app-movie-${movieVersion}.apk"
@@ -64,7 +83,13 @@ dependencies {
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:2.2.5"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
+        transitive = true
+    }
 }
+
 repositories {
     mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
 }
