@@ -11,6 +11,7 @@ import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.utils.Constants
 import kotlinx.android.synthetic.main.activity_web_view.*
 
+
 class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +38,7 @@ class WebViewActivity : AppCompatActivity() {
                 }
             }
 
-            // https://developer.android.com/training/articles/security-tips#WebView
+            /** https://developer.android.com/training/articles/security-tips#WebView **/
             settings.javaScriptEnabled = true
 
             loadUrl(url)

@@ -7,7 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 
+
 internal class BindingAdapters {
+
     companion object {
         @JvmStatic
         @BindingAdapter("android:html")
@@ -25,4 +27,5 @@ internal class BindingAdapters {
                     .into(imageView)
         }
     }
+
 }

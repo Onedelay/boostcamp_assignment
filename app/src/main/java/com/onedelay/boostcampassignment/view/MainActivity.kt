@@ -3,6 +3,7 @@ package com.onedelay.boostcampassignment.view
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -11,7 +12,6 @@ import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.model.MovieItem
 import com.onedelay.boostcampassignment.model.RetrofitApi
 import com.onedelay.boostcampassignment.utils.Constants
-import com.onedelay.boostcampassignment.utils.DividerItemDecoration
 import com.onedelay.boostcampassignment.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -34,8 +34,6 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
         setContentView(R.layout.activity_main)
 
         initViews()
-
-        button.setOnClickListener { requestButton() }
     }
 
     override fun onDestroy() {
@@ -53,8 +51,24 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
         val intent = Intent(this@MainActivity, WebViewActivity::class.java).apply {
             putExtra(Constants.URL, item.link)
         }
-
         startActivity(intent)
+    }
+
+    private fun initViews() {
+        searchResultAdapter = MovieAdapter(this)
+
+        val linearLayoutManager = LinearLayoutManager(baseContext)
+
+        recyclerView.apply {
+            adapter       = this@MainActivity.searchResultAdapter
+            layoutManager = linearLayoutManager
+
+            setHasFixedSize(true)
+
+            addItemDecoration(DividerItemDecoration(this@MainActivity, linearLayoutManager.orientation))
+        }
+
+        button.setOnClickListener { requestButton() }
     }
 
     private fun requestButton() {
@@ -77,26 +91,12 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
         }
     }
 
-    private fun initViews() {
-        searchResultAdapter = MovieAdapter(this)
-
-        recyclerView.apply {
-            adapter       = this@MainActivity.searchResultAdapter
-            layoutManager = LinearLayoutManager(baseContext)
-
-            setHasFixedSize(true)
-
-            addItemDecoration(DividerItemDecoration(this@MainActivity))
-        }
-    }
-
     private fun requestMovies(position: Int) {
         if(position == 1) {
             progressBar.visibility = View.VISIBLE
         }
 
-        disposable.add(
-                RetrofitApi.service.requestMovieInfo(query = previousQuery, start = position)
+        disposable.add(RetrofitApi.service.requestMovieInfo(query = previousQuery, start = position)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -111,8 +111,7 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
                                 {
                                     it.printStackTrace()
                                     progressBar.visibility = View.GONE
-                                })
-        )
+                                }))
     }
 
 }
