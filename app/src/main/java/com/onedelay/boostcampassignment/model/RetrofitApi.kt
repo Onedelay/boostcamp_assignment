@@ -5,7 +5,9 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
+
 object RetrofitApi {
+
     private const val BASE_URL = "https://openapi.naver.com/"
 
     val service: RetrofitService
@@ -19,6 +21,7 @@ object RetrofitApi {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
+
         service = retrofit.create(RetrofitService::class.java)
     }
 }

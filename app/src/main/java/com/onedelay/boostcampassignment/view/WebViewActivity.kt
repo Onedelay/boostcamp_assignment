@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.webkit.WebView.setWebContentsDebuggingEnabled
 import android.webkit.WebViewClient
 import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.utils.Constants
@@ -26,23 +27,22 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     private fun setupWebView(url: String) {
-        webView.webViewClient = WebViewClient()
-        webView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                web_view_load_progress_bar.progress = newProgress
-                if (newProgress < 100) {
-                    web_view_load_progress_bar.visibility = View.VISIBLE
-                } else {
-                    web_view_load_progress_bar.visibility = View.GONE
+        webView.apply {
+            webViewClient = WebViewClient()
+
+            webChromeClient = object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                    web_view_load_progress_bar.progress = newProgress
+                    web_view_load_progress_bar.visibility = if(newProgress < 100) View.VISIBLE else View.GONE
                 }
             }
+
+            // https://developer.android.com/training/articles/security-tips#WebView
+            settings.javaScriptEnabled = true
+
+            loadUrl(url)
+
+            setWebContentsDebuggingEnabled(true)
         }
-
-        // https://developer.android.com/training/articles/security-tips#WebView
-        webView.settings.javaScriptEnabled = true
-
-        webView.loadUrl(url)
-
-        WebView.setWebContentsDebuggingEnabled(true)
     }
 }

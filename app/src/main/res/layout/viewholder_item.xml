@@ -3,6 +3,16 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools">
 
+  <data>
+    <variable
+        name="item"
+        type="com.onedelay.boostcampassignment.model.MovieItem" />
+
+    <variable
+        name="listener"
+        type="com.onedelay.boostcampassignment.view.MovieAdapter.OnMovieListener" />
+  </data>
+
   <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -79,13 +89,4 @@
 
   </android.support.constraint.ConstraintLayout>
 
-  <data>
-    <variable
-      name="item"
-      type="com.onedelay.boostcampassignment.model.MovieItem" />
-
-    <variable
-      name="listener"
-      type="com.onedelay.boostcampassignment.view.MovieAdapter.OnMovieListener" />
-  </data>
 </layout>

@@ -18,11 +18,14 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener {
-    private var adapter: MovieAdapter? = null
-    private var count = 0
-    private var total = 0
-    private var search = "" // 이전 검색어
+
+    private lateinit var searchResultAdapter: MovieAdapter
+
+    private var loadedCount   = 0
+    private var totalCount    = 0
+    private var previousQuery = ""
 
     private var disposable = CompositeDisposable()
 
@@ -32,9 +35,7 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
 
         initViews()
 
-        button.setOnClickListener {
-            requestButton()
-        }
+        button.setOnClickListener { requestButton() }
     }
 
     override fun onDestroy() {
@@ -42,13 +43,30 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
         disposable.clear()
     }
 
+    override fun onLoadMoreMovieList(position: Int) {
+        if(totalCount > position) {
+            requestMovies(position)
+        }
+    }
+
+    override fun onMovieItemClick(item: MovieItem) {
+        val intent = Intent(this@MainActivity, WebViewActivity::class.java).apply {
+            putExtra(Constants.URL, item.link)
+        }
+
+        startActivity(intent)
+    }
+
     private fun requestButton() {
-        if(search != editText.text.toString()) {
-            search = editText.text.toString()
+        if(previousQuery != editText.text.toString()) {
+            previousQuery = editText.text.toString()
+
             if(Utils.isNetworkConnected(this)) {
-                if(search.isNotEmpty()) {
-                    editText.onEditorAction(EditorInfo.IME_ACTION_DONE)
-                    adapter?.clearItems()
+                if(previousQuery.isNotEmpty()) {
+                    editText.onEditorAction(EditorInfo.IME_ACTION_NEXT)
+
+                    searchResultAdapter.clearItems()
+
                     requestMovies(1)
                 } else {
                     Toast.makeText(this, resources.getText(R.string.toast_msg_edittext_error), Toast.LENGTH_SHORT).show()
@@ -60,26 +78,16 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
     }
 
     private fun initViews() {
-        adapter = MovieAdapter(this)
+        searchResultAdapter = MovieAdapter(this)
+
         recyclerView.apply {
+            adapter       = this@MainActivity.searchResultAdapter
             layoutManager = LinearLayoutManager(baseContext)
+
             setHasFixedSize(true)
-            adapter = this@MainActivity.adapter
+
             addItemDecoration(DividerItemDecoration(this@MainActivity))
         }
-    }
-
-    override fun onLoadMoreMovieList(position: Int) {
-        if(total > position) {
-            requestMovies(position)
-        }
-    }
-
-    override fun onMovieItemClick(item: MovieItem) {
-        val intent = Intent(this@MainActivity, WebViewActivity::class.java).apply {
-            putExtra(Constants.URL, item.link)
-        }
-        startActivity(intent)
     }
 
     private fun requestMovies(position: Int) {
@@ -88,23 +96,23 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
         }
 
         disposable.add(
-                RetrofitApi.service.requestMovieInfo(search, position)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            {
-                                adapter?.addItems(it.items)
-                                count = it.items.size
-                                total = it.total
-                                progressBar.visibility = View.GONE
+                RetrofitApi.service.requestMovieInfo(query = previousQuery, start = position)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    searchResultAdapter.addItems(it.items)
+                                    loadedCount = it.items.size
+                                    totalCount = it.total
 
-                                tv_content.visibility = if (count == 0) View.VISIBLE else View.GONE
-                            },
-                            {
-                                it.printStackTrace()
-                                progressBar.visibility = View.GONE
-                            }
-                ))
+                                    progressBar.visibility = View.GONE
+                                    tv_content.visibility = if (loadedCount == 0) View.VISIBLE else View.GONE
+                                },
+                                {
+                                    it.printStackTrace()
+                                    progressBar.visibility = View.GONE
+                                })
+        )
     }
 
 }

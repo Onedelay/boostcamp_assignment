@@ -7,23 +7,34 @@
     android:orientation="vertical"
     tools:context=".view.WebViewActivity">
 
-    <!--<android.support.design.widget.AppBarLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:theme="@style/AppTheme.AppBarOverlay">-->
-
     <!--
     https://stackoverflow.com/questions/27354812/android-remove-left-margin-from-actionbars-custom-layout
     -->
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/web_view_load_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:progressBackgroundTint="@color/colorPrimary"
+        android:progressTint="#3e3e3e"
+        android:visibility="gone" />
+
+    <!--</android.support.design.widget.AppBarLayout>-->
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:contentInsetStart="0dp"
-        android:contentInsetLeft="0dp"
         android:contentInsetEnd="0dp"
+        android:contentInsetLeft="0dp"
         android:contentInsetRight="0dp"
+        android:contentInsetStart="0dp"
         app:contentInsetEnd="0dp"
         app:contentInsetLeft="0dp"
         app:contentInsetRight="0dp"
@@ -37,35 +48,19 @@
                 android:id="@+id/button_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="5dp"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_arrow_back_black" />
 
             <TextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
+                android:layout_gravity="center"
                 android:text="@string/app_name"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
-
-    <android.support.v4.widget.ContentLoadingProgressBar
-        android:id="@+id/web_view_load_progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:progressBackgroundTint="@color/colorPrimary"
-        android:progressTint="#3e3e3e"
-        android:visibility="gone" />
-
-    <!--</android.support.design.widget.AppBarLayout>-->
-
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="846237fd755b3cd3588a6218539d0caa1e3647f8" />
+    </application>
+
+</manifest>
