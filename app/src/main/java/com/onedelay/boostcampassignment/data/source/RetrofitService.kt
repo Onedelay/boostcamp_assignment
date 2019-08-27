@@ -2,6 +2,7 @@ package com.onedelay.boostcampassignment.data.source
 
 import com.onedelay.boostcampassignment.data.MovieList
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
@@ -14,6 +15,6 @@ interface RetrofitService {
     @Headers("X-Naver-Client-Id: 1a8GYU3yLDmzss142rsx", "X-Naver-Client-Secret: hZjZjbMr5R")
     @GET("/v1/search/movie.json")
     fun requestMovieInfo(@Query("query") query: String,
-                         @Query("start") start: Int): Observable<MovieList>
+                         @Query("start") start: Int): Single<MovieList>
 
 }

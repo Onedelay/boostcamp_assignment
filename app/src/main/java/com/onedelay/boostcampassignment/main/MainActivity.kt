@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.data.MovieItem
+import com.onedelay.boostcampassignment.data.MovieListRepository
 import com.onedelay.boostcampassignment.data.source.RetrofitApi
 import com.onedelay.boostcampassignment.result.WebViewActivity
 import com.onedelay.boostcampassignment.utils.Constants
@@ -33,7 +34,7 @@ internal class MainActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter = MainPresenter(this, RetrofitApi)
+        presenter = MainPresenter(this, MovieListRepository(RetrofitApi))
 
         initViews()
     }

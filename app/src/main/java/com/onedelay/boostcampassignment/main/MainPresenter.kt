@@ -1,5 +1,6 @@
 package com.onedelay.boostcampassignment.main
 
+import com.onedelay.boostcampassignment.data.MovieListRepository
 import com.onedelay.boostcampassignment.data.source.RetrofitApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -8,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 
 internal class MainPresenter constructor(
         private val view: MainContract.View,
-        private val remoteSource: RetrofitApi
+        private val movieRepository: MovieListRepository
 
 ) : MainContract.Presenter {
 
@@ -56,7 +57,7 @@ internal class MainPresenter constructor(
             view.showProgressBar()
         }
 
-        remoteSource.service.requestMovieInfo(query = previousQuery, start = position)
+        movieRepository.fetchMovieList(query = previousQuery, start = position)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
