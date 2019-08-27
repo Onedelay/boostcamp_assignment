@@ -1,11 +1,13 @@
 package com.onedelay.boostcampassignment.main
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.data.MovieItem
@@ -19,32 +21,30 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener {
+internal class MainActivity
+
+    : AppCompatActivity(), MovieAdapter.OnMovieListener, MainContract.View {
+
+    private lateinit var presenter: MainContract.Presenter
 
     private lateinit var searchResultAdapter: MovieAdapter
-
-    private var loadedCount   = 0
-    private var totalCount    = 0
-    private var previousQuery = ""
-
-    private var disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        presenter = MainPresenter(this, RetrofitApi)
 
         initViews()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
+        presenter.onDestroy()
     }
 
     override fun onLoadMoreMovieList(position: Int) {
-        if(totalCount > position) {
-            requestMovies(position)
-        }
+        presenter.loadMoreMovies(position)
     }
 
     override fun onMovieItemClick(item: MovieItem) {
@@ -52,6 +52,28 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
             putExtra(Constants.URL, item.link)
         }
         startActivity(intent)
+    }
+
+    override fun showErrorMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showMovieList(list: List<MovieItem>) {
+        searchResultAdapter.addItems(list)
+    }
+
+    override fun showProgressBar() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun showResult() {
+        progressBar.visibility = View.GONE
+        tv_content.visibility = View.GONE
+    }
+
+    override fun showEmptyResult() {
+        progressBar.visibility = View.GONE
+        tv_content.visibility = View.VISIBLE
     }
 
     private fun initViews() {
@@ -68,7 +90,9 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
             addItemDecoration(DividerItemDecoration(this@MainActivity, linearLayoutManager.orientation))
         }
 
-        button.setOnClickListener { requestButton() }
+        button.setOnClickListener {
+            requestButton()
+        }
 
         editText.setOnEditorActionListener { _, _, _ ->
             requestButton()
@@ -77,44 +101,15 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
     }
 
     private fun requestButton() {
-        if(previousQuery != editText.text.toString()) {
-            previousQuery = editText.text.toString()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
 
-            if(Utils.isNetworkConnected(this)) {
-                if(previousQuery.isNotEmpty()) {
-                    searchResultAdapter.clearItems()
+        val isNetworkAlive = presenter.checkNetworkStatus(Utils.isNetworkConnected(this))
 
-                    requestMovies(1)
-                } else {
-                    Toast.makeText(this, resources.getText(R.string.toast_msg_edittext_error), Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, resources.getText(R.string.toast_msg_network_error), Toast.LENGTH_SHORT).show()
-            }
+        if(isNetworkAlive) {
+            searchResultAdapter.clearItems()
+            presenter.requestMovies(editText.text.toString())
         }
-    }
-
-    private fun requestMovies(position: Int) {
-        if(position == 1) {
-            progressBar.visibility = View.VISIBLE
-        }
-
-        disposable.add(RetrofitApi.service.requestMovieInfo(query = previousQuery, start = position)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                {
-                                    searchResultAdapter.addItems(it.items)
-                                    loadedCount = it.items.size
-                                    totalCount = it.total
-
-                                    progressBar.visibility = View.GONE
-                                    tv_content.visibility = if (loadedCount == 0) View.VISIBLE else View.GONE
-                                },
-                                {
-                                    it.printStackTrace()
-                                    progressBar.visibility = View.GONE
-                                }))
     }
 
 }
