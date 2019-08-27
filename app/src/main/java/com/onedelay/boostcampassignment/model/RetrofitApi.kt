@@ -24,4 +24,5 @@ object RetrofitApi {
 
         service = retrofit.create(RetrofitService::class.java)
     }
+
 }
