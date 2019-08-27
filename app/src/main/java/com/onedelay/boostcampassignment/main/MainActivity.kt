@@ -1,4 +1,4 @@
-package com.onedelay.boostcampassignment.view
+package com.onedelay.boostcampassignment.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,11 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.onedelay.boostcampassignment.R
-import com.onedelay.boostcampassignment.model.MovieItem
-import com.onedelay.boostcampassignment.model.RetrofitApi
+import com.onedelay.boostcampassignment.data.MovieItem
+import com.onedelay.boostcampassignment.data.source.RetrofitApi
+import com.onedelay.boostcampassignment.result.WebViewActivity
 import com.onedelay.boostcampassignment.utils.Constants
 import com.onedelay.boostcampassignment.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -69,6 +69,11 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
         }
 
         button.setOnClickListener { requestButton() }
+
+        editText.setOnEditorActionListener { _, _, _ ->
+            requestButton()
+            true
+        }
     }
 
     private fun requestButton() {
@@ -77,8 +82,6 @@ internal class MainActivity : AppCompatActivity(), MovieAdapter.OnMovieListener 
 
             if(Utils.isNetworkConnected(this)) {
                 if(previousQuery.isNotEmpty()) {
-                    editText.onEditorAction(EditorInfo.IME_ACTION_NEXT)
-
                     searchResultAdapter.clearItems()
 
                     requestMovies(1)

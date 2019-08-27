@@ -1,4 +1,4 @@
-package com.onedelay.boostcampassignment.model
+package com.onedelay.boostcampassignment.data.source
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

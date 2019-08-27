@@ -1,8 +1,8 @@
-package com.onedelay.boostcampassignment.view
+package com.onedelay.boostcampassignment.main
 
 import android.support.v7.widget.RecyclerView
 import com.onedelay.boostcampassignment.databinding.ViewholderItemBinding
-import com.onedelay.boostcampassignment.model.MovieItem
+import com.onedelay.boostcampassignment.data.MovieItem
 
 
 class MovieViewHolder(private val binding: ViewholderItemBinding) : RecyclerView.ViewHolder(binding.root) {

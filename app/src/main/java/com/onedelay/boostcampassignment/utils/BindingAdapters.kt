@@ -1,4 +1,4 @@
-package com.onedelay.boostcampassignment.view
+package com.onedelay.boostcampassignment.utils
 
 import android.databinding.BindingAdapter
 import android.os.Build
@@ -15,7 +15,7 @@ internal class BindingAdapters {
         @BindingAdapter("android:html")
         fun setHtml(textView: TextView, html: String) {
             textView.text =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
                     else Html.fromHtml(html)
         }
 

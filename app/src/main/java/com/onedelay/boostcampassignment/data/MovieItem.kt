@@ -1,4 +1,4 @@
-package com.onedelay.boostcampassignment.model
+package com.onedelay.boostcampassignment.data
 
 class MovieList(val items: List<MovieItem>,
                      val total: Int)

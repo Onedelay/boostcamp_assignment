@@ -6,11 +6,11 @@
   <data>
     <variable
         name="item"
-        type="com.onedelay.boostcampassignment.model.MovieItem" />
+        type="com.onedelay.boostcampassignment.data.MovieItem" />
 
     <variable
         name="listener"
-        type="com.onedelay.boostcampassignment.view.MovieAdapter.OnMovieListener" />
+        type="com.onedelay.boostcampassignment.main.MovieAdapter.OnMovieListener" />
   </data>
 
   <android.support.constraint.ConstraintLayout

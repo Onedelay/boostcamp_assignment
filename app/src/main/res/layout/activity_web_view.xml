@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.WebViewActivity">
+    tools:context=".result.WebViewActivity">
 
     <!--
     https://stackoverflow.com/questions/27354812/android-remove-left-margin-from-actionbars-custom-layout

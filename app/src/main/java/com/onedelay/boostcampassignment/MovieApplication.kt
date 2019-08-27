@@ -5,7 +5,7 @@ import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
 
-internal class Movie : Application() {
+internal class MovieApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

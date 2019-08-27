@@ -1,7 +1,7 @@
-package com.onedelay.boostcampassignment.model
+package com.onedelay.boostcampassignment.data.source
 
+import com.onedelay.boostcampassignment.data.MovieList
 import io.reactivex.Observable
-import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query

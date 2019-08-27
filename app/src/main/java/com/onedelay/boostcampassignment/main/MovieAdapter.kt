@@ -1,4 +1,4 @@
-package com.onedelay.boostcampassignment.view
+package com.onedelay.boostcampassignment.main
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.databinding.ViewholderItemBinding
-import com.onedelay.boostcampassignment.model.MovieItem
+import com.onedelay.boostcampassignment.data.MovieItem
 import java.util.*
 
 
