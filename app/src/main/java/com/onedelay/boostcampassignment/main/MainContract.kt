@@ -7,7 +7,7 @@ internal interface MainContract {
 
     interface View {
 
-        fun showErrorMessage(message: String)
+        fun showToastMessage(message: String)
 
         fun showMovieList(list: List<MovieItem>)
 
@@ -16,6 +16,8 @@ internal interface MainContract {
         fun showResult()
 
         fun showEmptyResult()
+
+        fun removeMovieItem(item: MovieItem)
 
     }
 
@@ -28,6 +30,10 @@ internal interface MainContract {
         fun requestMovies(query: String)
 
         fun loadMoreMovies(position: Int)
+
+        fun addLikedMovie(item: MovieItem)
+
+        fun selectDialogMenuOf(item: MovieItem, which: Int)
 
     }
 

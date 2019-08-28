@@ -1,7 +1,8 @@
 package com.onedelay.boostcampassignment.main
 
+import com.onedelay.boostcampassignment.data.LikedMovieRepository
+import com.onedelay.boostcampassignment.data.MovieItem
 import com.onedelay.boostcampassignment.data.MovieListRepository
-import com.onedelay.boostcampassignment.data.source.RetrofitApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -9,7 +10,8 @@ import io.reactivex.schedulers.Schedulers
 
 internal class MainPresenter constructor(
         private val view: MainContract.View,
-        private val movieRepository: MovieListRepository
+        private val movieRepository: MovieListRepository,
+        private val likedMovieListRepository: LikedMovieRepository
 
 ) : MainContract.Presenter {
 
@@ -23,10 +25,10 @@ internal class MainPresenter constructor(
     }
 
     override fun checkNetworkStatus(status: Boolean): Boolean {
-        if (!status) {
+        if(!status) {
             view.run {
                 showEmptyResult()
-                showErrorMessage("인터넷 연결을 확인해주세요")
+                showToastMessage("인터넷 연결을 확인해주세요")
             }
         }
         return status
@@ -41,7 +43,7 @@ internal class MainPresenter constructor(
         }  else {
             view.run {
                 showEmptyResult()
-                showErrorMessage("검색어를 입력해주세요")
+                showToastMessage("검색어를 입력해주세요")
             }
         }
     }
@@ -52,8 +54,28 @@ internal class MainPresenter constructor(
         }
     }
 
+    override fun addLikedMovie(item: MovieItem) {
+        if(likedMovieListRepository.addLikedMovie(item)) {
+            view.showToastMessage("즐겨찾기 목록에 추가되었습니다.")
+        } else {
+            view.showToastMessage("오류가 발생했습니다.")
+        }
+    }
+
+    override fun selectDialogMenuOf(item: MovieItem, which: Int) {
+        when(which) {
+            0 -> {
+                view.removeMovieItem(item)
+            }
+
+            1 -> {
+                addLikedMovie(item)
+            }
+        }
+    }
+
     private fun requestMovies(position: Int) {
-        if (position == 1) {
+        if(position == 1) {
             view.showProgressBar()
         }
 
@@ -76,7 +98,7 @@ internal class MainPresenter constructor(
                             it.printStackTrace()
                             view.run {
                                 showEmptyResult()
-                                showErrorMessage("예상치 못한 오류가 발생했습니다")
+                                showToastMessage("예상치 못한 오류가 발생했습니다.")
                             }
                         })
                 .also {

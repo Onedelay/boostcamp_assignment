@@ -1,32 +1,29 @@
 package com.onedelay.boostcampassignment.main
 
-import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.onedelay.boostcampassignment.R
-import com.onedelay.boostcampassignment.databinding.ViewholderItemBinding
 import com.onedelay.boostcampassignment.data.MovieItem
 import java.util.*
 
 
-internal class MovieAdapter constructor(private val listener: OnMovieListener) : RecyclerView.Adapter<MovieViewHolder>() {
+internal class MovieAdapter constructor(
+        private val listener: MovieViewHolder.ItemClickListener,
+        private val onLoadMoreMovies: (Int) -> Unit)
 
-    interface OnMovieListener {
-        fun onMovieItemClick(item: MovieItem)
-        fun onLoadMoreMovieList(position: Int)
-    }
+    : RecyclerView.Adapter<MovieViewHolder>() {
 
     private val list = ArrayList<MovieItem>()
 
     private val threshold = 5
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MovieViewHolder {
-        val binding = DataBindingUtil.inflate<ViewholderItemBinding>(LayoutInflater.from(viewGroup.context), R.layout.viewholder_item, viewGroup, false)
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.viewholder_item, viewGroup, false)
 
-        binding.listener = listener
-
-        return MovieViewHolder(binding)
+        return MovieViewHolder(view).apply {
+            setItemClickListener(listener)
+        }
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
@@ -35,7 +32,7 @@ internal class MovieAdapter constructor(private val listener: OnMovieListener) :
          * 26 번째 위치에 있을 때 31 번째 데이터 요청
          */
         if(position == itemCount - threshold) {
-            listener.onLoadMoreMovieList(itemCount + 1)
+            onLoadMoreMovies(itemCount + 1)
         }
 
         holder.bind(list[position])
@@ -47,6 +44,12 @@ internal class MovieAdapter constructor(private val listener: OnMovieListener) :
         val prevSize = this.list.size
         this.list.addAll(list)
         notifyItemRangeInserted(prevSize, list.size)
+    }
+
+    fun removeItem(item: MovieItem) {
+        val index = list.indexOf(item)
+        list.remove(item)
+        notifyItemRemoved(index)
     }
 
     fun clearItems() {
