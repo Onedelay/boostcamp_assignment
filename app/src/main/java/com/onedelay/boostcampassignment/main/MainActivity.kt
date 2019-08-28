@@ -8,14 +8,17 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.onedelay.boostcampassignment.R
-import com.onedelay.boostcampassignment.data.LikedMovieRepository
+import com.onedelay.boostcampassignment.data.InMemoryDataHolder
 import com.onedelay.boostcampassignment.data.MovieItem
 import com.onedelay.boostcampassignment.data.MovieListRepository
 import com.onedelay.boostcampassignment.data.source.RetrofitApi
+import com.onedelay.boostcampassignment.liked.LikedMovieActivity
 import com.onedelay.boostcampassignment.result.WebViewActivity
 import com.onedelay.boostcampassignment.utils.Constants
 import com.onedelay.boostcampassignment.utils.Utils
@@ -34,7 +37,7 @@ internal class MainActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter = MainPresenter(this, MovieListRepository(RetrofitApi), LikedMovieRepository)
+        presenter = MainPresenter(this, MovieListRepository(RetrofitApi), InMemoryDataHolder)
 
         initViews()
     }
@@ -42,6 +45,21 @@ internal class MainActivity
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.option_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId) {
+            R.id.menu_liked_movie -> {
+                startActivity(Intent(this, LikedMovieActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onClick(item: MovieItem) {

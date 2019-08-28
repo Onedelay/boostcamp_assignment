@@ -3,7 +3,7 @@ package com.onedelay.boostcampassignment.data
 typealias MovieKey = String
 
 
-object LikedMovieRepository {
+object InMemoryDataHolder {
 
     private val likedMovieMap = HashMap<MovieKey, MovieItem>()
 

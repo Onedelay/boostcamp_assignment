@@ -6,4 +6,5 @@
     <string name="toast_msg_network_error">인터넷 연결을 확인해주세요</string>
     <string name="toast_msg_edittext_error">검색어를 입력해주세요</string>
     <string name="str_textview_content">표시할 내용이 없습니다 ㅠ_ㅠ</string>
+    <string name="menu_option_liked_movie_list">즐겨찾기</string>
 </resources>

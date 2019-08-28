@@ -1,6 +1,6 @@
 package com.onedelay.boostcampassignment.main
 
-import com.onedelay.boostcampassignment.data.LikedMovieRepository
+import com.onedelay.boostcampassignment.data.InMemoryDataHolder
 import com.onedelay.boostcampassignment.data.MovieItem
 import com.onedelay.boostcampassignment.data.MovieListRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 internal class MainPresenter constructor(
         private val view: MainContract.View,
         private val movieRepository: MovieListRepository,
-        private val likedMovieListRepository: LikedMovieRepository
+        private val inMemoryDataHolder: InMemoryDataHolder
 
 ) : MainContract.Presenter {
 
@@ -55,7 +55,7 @@ internal class MainPresenter constructor(
     }
 
     override fun addLikedMovie(item: MovieItem) {
-        if(likedMovieListRepository.addLikedMovie(item)) {
+        if(inMemoryDataHolder.addLikedMovie(item)) {
             view.showToastMessage("즐겨찾기 목록에 추가되었습니다.")
         } else {
             view.showToastMessage("오류가 발생했습니다.")
