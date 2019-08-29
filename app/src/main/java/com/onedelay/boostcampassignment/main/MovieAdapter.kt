@@ -57,4 +57,10 @@ internal class MovieAdapter constructor(
         notifyDataSetChanged()
     }
 
+    fun updateItem(item: MovieItemLookFeel) {
+        val position = list.indexOf(item)
+        list[position].starred = item.starred
+        notifyItemChanged(position)
+    }
+
 }

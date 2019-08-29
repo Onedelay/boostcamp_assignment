@@ -9,4 +9,6 @@ class MovieItemLookFeel(
         val director: String,
         val actor: String,
         val userRating: String
-)
+) {
+    var starred: Boolean = false
+}

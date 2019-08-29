@@ -19,6 +19,10 @@ internal interface MainContract {
 
         fun removeMovieItem(item: MovieItemLookFeel)
 
+        fun notifyUpdateListItem(item: MovieItemLookFeel)
+
+        fun notifyUpdateList(list: List<MovieItemLookFeel>)
+
     }
 
     interface Presenter {
@@ -31,9 +35,11 @@ internal interface MainContract {
 
         fun loadMoreMovies(position: Int)
 
-        fun addLikedMovie(item: MovieItemLookFeel)
+        fun updateLikedMovie(item: MovieItemLookFeel)
 
         fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int)
+
+        fun notifyChangedLikedMovieList()
 
     }
 

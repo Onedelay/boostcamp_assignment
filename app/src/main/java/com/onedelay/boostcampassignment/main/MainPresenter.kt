@@ -20,6 +20,9 @@ internal class MainPresenter constructor(
     private var previousQuery = ""
     private var totalCount    = 0
 
+    /** View 쪽에서 이것을 observe 하고있다면 뷰한테 변경을 notify 할 필요 없음 */
+    private val movieList = ArrayList<MovieItemLookFeel>()
+
     override fun onDestroy() {
         disposable.clear()
     }
@@ -38,6 +41,7 @@ internal class MainPresenter constructor(
         if(query.isNotEmpty()) {
             if(previousQuery != query) {
                 previousQuery = query
+                this.movieList.clear()
                 requestMovies(1)
             }
         }  else {
@@ -54,12 +58,22 @@ internal class MainPresenter constructor(
         }
     }
 
-    override fun addLikedMovie(item: MovieItemLookFeel) {
-        if(inMemoryDataHolder.addLikedMovie(item)) {
-            view.showToastMessage("즐겨찾기 목록에 추가되었습니다.")
+    override fun updateLikedMovie(item: MovieItemLookFeel) {
+        if(!item.starred) {
+            if(inMemoryDataHolder.addLikedMovie(item)) {
+                view.showToastMessage("즐겨찾기 목록에 추가되었습니다.")
+            } else {
+                view.showToastMessage("오류가 발생했습니다.")
+            }
         } else {
-            view.showToastMessage("오류가 발생했습니다.")
+            inMemoryDataHolder.removeLikedMovie(item)
+            view.showToastMessage("즐겨찾기 목록에서 삭제되었습니다.")
         }
+
+        val position = movieList.indexOf(item)
+        movieList[position].starred = !movieList[position].starred
+
+        view.notifyUpdateListItem(movieList[position])
     }
 
     override fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int) {
@@ -69,9 +83,14 @@ internal class MainPresenter constructor(
             }
 
             1 -> {
-                addLikedMovie(item)
+                updateLikedMovie(item)
             }
         }
+    }
+
+    override fun notifyChangedLikedMovieList() {
+        updateLikedMovie(this.movieList)
+        view.notifyUpdateList(this.movieList)
     }
 
     private fun requestMovies(position: Int) {
@@ -83,13 +102,19 @@ internal class MainPresenter constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        {
-                            if(it.items.isNotEmpty()) {
-                                totalCount = it.total
+                        { movieList ->
+                            if(movieList.items.isNotEmpty()) {
+                                totalCount = movieList.total
+
+                                val convertedList = updateLikedMovie(movieList.convertToLookFeel())
+
+                                this.movieList.addAll(convertedList)
+
                                 view.run {
                                     showResult()
-                                    showMovieList(it.convertToLookFeel())
+                                    showMovieList(convertedList)
                                 }
+
                             } else {
                                 view.showEmptyResult()
                             }
@@ -105,5 +130,14 @@ internal class MainPresenter constructor(
                     disposable.add(it)
                 }
     }
+
+    private fun updateLikedMovie(list: List<MovieItemLookFeel>): List<MovieItemLookFeel> {
+        return list.map {
+            it.starred = checkIsLiked(it)
+            it
+        }
+    }
+
+    private fun checkIsLiked(movie: MovieItemLookFeel) = inMemoryDataHolder.getLikedMovieMap().containsKey(movie.link)
 
 }

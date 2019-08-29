@@ -61,6 +61,8 @@ class MovieViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(item
             tv_director.text = item.director
 
             tv_actor.text = item.actor
+
+            iv_starred.visibility = if (item.starred) View.VISIBLE else View.GONE
         }
 
     }

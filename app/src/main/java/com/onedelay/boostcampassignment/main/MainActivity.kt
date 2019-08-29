@@ -1,7 +1,6 @@
 package com.onedelay.boostcampassignment.main
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -29,6 +28,10 @@ internal class MainActivity
 
     : AppCompatActivity(), MovieViewHolder.ItemClickListener, MainContract.View {
 
+    companion object {
+        const val REQUEST_CODE = 1111
+    }
+
     private lateinit var presenter: MainContract.Presenter
 
     private lateinit var searchResultAdapter: MovieAdapter
@@ -47,6 +50,12 @@ internal class MainActivity
         presenter.onDestroy()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(resultCode) {
+            LikedMovieActivity.RESULT_CODE_DATA_CHANGED -> presenter.notifyChangedLikedMovieList()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
         return true
@@ -55,7 +64,7 @@ internal class MainActivity
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item?.itemId) {
             R.id.menu_liked_movie -> {
-                startActivity(Intent(this, LikedMovieActivity::class.java))
+                startActivityForResult(Intent(this, LikedMovieActivity::class.java), REQUEST_CODE)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -70,14 +79,7 @@ internal class MainActivity
     }
 
     override fun onLongClick(item: MovieItemLookFeel) {
-        val builder = AlertDialog.Builder(this).apply {
-            setItems(
-                    arrayOf("삭제", "즐겨찾기"),
-                    DialogInterface.OnClickListener { _, which ->
-                        presenter.selectDialogMenuOf(item, which)
-                    })
-        }
-        builder.create().show()
+       showDialog(item)
     }
 
     override fun showToastMessage(message: String) {
@@ -104,6 +106,18 @@ internal class MainActivity
 
     override fun removeMovieItem(item: MovieItemLookFeel) {
         searchResultAdapter.removeItem(item)
+    }
+
+    override fun notifyUpdateListItem(item: MovieItemLookFeel) {
+        searchResultAdapter.updateItem(item)
+    }
+
+    override fun notifyUpdateList(list: List<MovieItemLookFeel>) {
+        searchResultAdapter.run {
+            clearItems()
+            addItems(list)
+            notifyDataSetChanged()
+        }
     }
 
     private fun initViews() {
@@ -146,6 +160,22 @@ internal class MainActivity
             searchResultAdapter.clearItems()
             presenter.requestMovies(editText.text.toString())
         }
+    }
+
+    private fun showDialog(item: MovieItemLookFeel) {
+        val dialogMessages = if(!item.starred) {
+            arrayOf("삭제", "즐겨찾기")
+        } else {
+            arrayOf("삭제", "즐겨찾기 삭제")
+        }
+
+        AlertDialog.Builder(this).apply {
+            setItems(
+                    dialogMessages
+            ) { _, which ->
+                presenter.selectDialogMenuOf(item, which)
+            }
+        }.create().show()
     }
 
 }

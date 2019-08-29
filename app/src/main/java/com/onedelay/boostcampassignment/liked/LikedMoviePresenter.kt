@@ -11,7 +11,11 @@ internal class LikedMoviePresenter constructor(
 ) : LikedMovieContract.Presenter {
 
     override fun requestLikeMovieList() {
-        view.showMovieList(likedRepository.getLikedMovieList())
+        val list = likedRepository.getLikedMovieList().map {
+            it.starred = false
+            it
+        }
+        view.showMovieList(list)
     }
 
     override fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int) {

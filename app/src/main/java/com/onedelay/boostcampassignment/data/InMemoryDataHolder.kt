@@ -22,6 +22,8 @@ object InMemoryDataHolder {
         likedMovieMap.remove(item.link)
     }
 
+    fun getLikedMovieMap(): Map<MovieKey, MovieItemLookFeel> = likedMovieMap
+
     fun getLikedMovieList(): List<MovieItemLookFeel> = likedMovieMap.values.toList()
 
 }

@@ -19,6 +19,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class LikedMovieActivity : AppCompatActivity(), MovieViewHolder.ItemClickListener, LikedMovieContract.View {
 
+    companion object {
+        const val RESULT_CODE_DATA_CHANGED = 1000
+        const val RESULT_CODE_DATA_UNCHANGED = -1000
+    }
+
     private lateinit var adapter: LikedMovieAdapter
 
     private lateinit var presenter: LikedMovieContract.Presenter
@@ -40,14 +45,13 @@ class LikedMovieActivity : AppCompatActivity(), MovieViewHolder.ItemClickListene
     }
 
     override fun onLongClick(item: MovieItemLookFeel) {
-        val builder = AlertDialog.Builder(this).apply {
+        AlertDialog.Builder(this).apply {
             setItems(
                     arrayOf("삭제"),
                     DialogInterface.OnClickListener { _, which ->
                         presenter.selectDialogMenuOf(item, which)
                     })
-        }
-        builder.create().show()
+        }.create().show()
     }
 
     override fun showMovieList(likedList: List<MovieItemLookFeel>) {
@@ -56,6 +60,9 @@ class LikedMovieActivity : AppCompatActivity(), MovieViewHolder.ItemClickListene
 
     override fun updateRemovedList(item: MovieItemLookFeel) {
         adapter.removeItem(item)
+
+        setResult(RESULT_CODE_DATA_CHANGED)
+
         Toast.makeText(this, "즐겨찾기 목록에서 삭제되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
