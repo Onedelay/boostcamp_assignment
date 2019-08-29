@@ -1,6 +1,6 @@
 package com.onedelay.boostcampassignment.main
 
-import com.onedelay.boostcampassignment.data.MovieItem
+import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 
 
 internal interface MainContract {
@@ -9,7 +9,7 @@ internal interface MainContract {
 
         fun showToastMessage(message: String)
 
-        fun showMovieList(list: List<MovieItem>)
+        fun showMovieList(list: List<MovieItemLookFeel>)
 
         fun showProgressBar()
 
@@ -17,7 +17,7 @@ internal interface MainContract {
 
         fun showEmptyResult()
 
-        fun removeMovieItem(item: MovieItem)
+        fun removeMovieItem(item: MovieItemLookFeel)
 
     }
 
@@ -31,9 +31,9 @@ internal interface MainContract {
 
         fun loadMoreMovies(position: Int)
 
-        fun addLikedMovie(item: MovieItem)
+        fun addLikedMovie(item: MovieItemLookFeel)
 
-        fun selectDialogMenuOf(item: MovieItem, which: Int)
+        fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int)
 
     }
 

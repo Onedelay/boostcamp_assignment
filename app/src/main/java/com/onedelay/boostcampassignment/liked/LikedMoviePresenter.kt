@@ -1,7 +1,7 @@
 package com.onedelay.boostcampassignment.liked
 
 import com.onedelay.boostcampassignment.data.InMemoryDataHolder
-import com.onedelay.boostcampassignment.data.MovieItem
+import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 
 
 internal class LikedMoviePresenter constructor(
@@ -14,7 +14,7 @@ internal class LikedMoviePresenter constructor(
         view.showMovieList(likedRepository.getLikedMovieList())
     }
 
-    override fun selectDialogMenuOf(item: MovieItem, which: Int) {
+    override fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int) {
         when(which) {
             0 -> {
                 likedRepository.removeLikedMovie(item)

@@ -1,13 +1,15 @@
 package com.onedelay.boostcampassignment.data
 
+import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
+
 typealias MovieKey = String
 
 
 object InMemoryDataHolder {
 
-    private val likedMovieMap = HashMap<MovieKey, MovieItem>()
+    private val likedMovieMap = HashMap<MovieKey, MovieItemLookFeel>()
 
-    fun addLikedMovie(item: MovieItem): Boolean {
+    fun addLikedMovie(item: MovieItemLookFeel): Boolean {
         return if (!likedMovieMap.containsKey(item.link)) {
             likedMovieMap[item.link] = item
             true
@@ -16,10 +18,10 @@ object InMemoryDataHolder {
         }
     }
 
-    fun removeLikedMovie(item: MovieItem) {
+    fun removeLikedMovie(item: MovieItemLookFeel) {
         likedMovieMap.remove(item.link)
     }
 
-    fun getLikedMovieList(): List<MovieItem> = likedMovieMap.values.toList()
+    fun getLikedMovieList(): List<MovieItemLookFeel> = likedMovieMap.values.toList()
 
 }

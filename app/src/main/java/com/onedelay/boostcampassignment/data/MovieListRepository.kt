@@ -1,7 +1,7 @@
 package com.onedelay.boostcampassignment.data
 
+import com.onedelay.boostcampassignment.data.dto.MovieList
 import com.onedelay.boostcampassignment.data.source.RetrofitApi
-import com.onedelay.boostcampassignment.main.MovieViewHolder
 import io.reactivex.Single
 
 

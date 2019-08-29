@@ -5,20 +5,20 @@ import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.view.View
 import com.bumptech.glide.Glide
-import com.onedelay.boostcampassignment.data.MovieItem
+import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import kotlinx.android.synthetic.main.viewholder_item.view.*
 
 
 class MovieViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     interface ItemClickListener {
-        fun onClick(item: MovieItem)
-        fun onLongClick(item: MovieItem)
+        fun onClick(item: MovieItemLookFeel)
+        fun onLongClick(item: MovieItemLookFeel)
     }
 
     private var listener: ItemClickListener? = null
 
-    private lateinit var item: MovieItem
+    private lateinit var item: MovieItemLookFeel
 
     init {
 
@@ -39,7 +39,7 @@ class MovieViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(item
         this.listener = listener
     }
 
-    fun bind(item: MovieItem) {
+    fun bind(item: MovieItemLookFeel) {
         this.item = item
 
         // FIXME: 이렇게 작성하면 내부적으로 findViewById 호출하기때문에 비효율적

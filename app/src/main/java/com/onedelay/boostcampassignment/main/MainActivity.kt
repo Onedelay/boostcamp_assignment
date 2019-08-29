@@ -15,8 +15,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.data.InMemoryDataHolder
-import com.onedelay.boostcampassignment.data.MovieItem
 import com.onedelay.boostcampassignment.data.MovieListRepository
+import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import com.onedelay.boostcampassignment.data.source.RetrofitApi
 import com.onedelay.boostcampassignment.liked.LikedMovieActivity
 import com.onedelay.boostcampassignment.result.WebViewActivity
@@ -62,14 +62,14 @@ internal class MainActivity
         }
     }
 
-    override fun onClick(item: MovieItem) {
+    override fun onClick(item: MovieItemLookFeel) {
         val intent = Intent(this@MainActivity, WebViewActivity::class.java).apply {
             putExtra(Constants.URL, item.link)
         }
         startActivity(intent)
     }
 
-    override fun onLongClick(item: MovieItem) {
+    override fun onLongClick(item: MovieItemLookFeel) {
         val builder = AlertDialog.Builder(this).apply {
             setItems(
                     arrayOf("삭제", "즐겨찾기"),
@@ -84,7 +84,7 @@ internal class MainActivity
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showMovieList(list: List<MovieItem>) {
+    override fun showMovieList(list: List<MovieItemLookFeel>) {
         searchResultAdapter.addItems(list)
     }
 
@@ -102,7 +102,7 @@ internal class MainActivity
         tv_content.visibility = View.VISIBLE
     }
 
-    override fun removeMovieItem(item: MovieItem) {
+    override fun removeMovieItem(item: MovieItemLookFeel) {
         searchResultAdapter.removeItem(item)
     }
 
@@ -127,7 +127,7 @@ internal class MainActivity
         val linearLayoutManager = LinearLayoutManager(baseContext)
 
         recyclerView.apply {
-            adapter       = this@MainActivity.searchResultAdapter
+            adapter = this@MainActivity.searchResultAdapter
             layoutManager = linearLayoutManager
 
             setHasFixedSize(true)

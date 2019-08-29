@@ -1,8 +1,8 @@
 package com.onedelay.boostcampassignment.main
 
 import com.onedelay.boostcampassignment.data.InMemoryDataHolder
-import com.onedelay.boostcampassignment.data.MovieItem
 import com.onedelay.boostcampassignment.data.MovieListRepository
+import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -54,7 +54,7 @@ internal class MainPresenter constructor(
         }
     }
 
-    override fun addLikedMovie(item: MovieItem) {
+    override fun addLikedMovie(item: MovieItemLookFeel) {
         if(inMemoryDataHolder.addLikedMovie(item)) {
             view.showToastMessage("즐겨찾기 목록에 추가되었습니다.")
         } else {
@@ -62,7 +62,7 @@ internal class MainPresenter constructor(
         }
     }
 
-    override fun selectDialogMenuOf(item: MovieItem, which: Int) {
+    override fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int) {
         when(which) {
             0 -> {
                 view.removeMovieItem(item)
@@ -88,7 +88,7 @@ internal class MainPresenter constructor(
                                 totalCount = it.total
                                 view.run {
                                     showResult()
-                                    showMovieList(it.items)
+                                    showMovieList(it.convertToLookFeel())
                                 }
                             } else {
                                 view.showEmptyResult()

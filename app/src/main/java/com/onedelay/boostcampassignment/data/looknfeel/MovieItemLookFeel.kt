@@ -1,8 +1,7 @@
-package com.onedelay.boostcampassignment.data
+package com.onedelay.boostcampassignment.data.looknfeel
 
-class MovieList(val items: List<MovieItem>, val total: Int)
 
-class MovieItem(
+class MovieItemLookFeel(
         val title: String,
         val link: String,
         val image: String,

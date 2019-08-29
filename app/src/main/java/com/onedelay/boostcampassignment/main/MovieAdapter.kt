@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.onedelay.boostcampassignment.R
-import com.onedelay.boostcampassignment.data.MovieItem
+import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import java.util.*
 
 
@@ -14,7 +14,7 @@ internal class MovieAdapter constructor(
 
     : RecyclerView.Adapter<MovieViewHolder>() {
 
-    private val list = ArrayList<MovieItem>()
+    private val list = ArrayList<MovieItemLookFeel>()
 
     private val threshold = 5
 
@@ -40,13 +40,13 @@ internal class MovieAdapter constructor(
 
     override fun getItemCount() = list.size
 
-    fun addItems(list: List<MovieItem>) {
+    fun addItems(list: List<MovieItemLookFeel>) {
         val prevSize = this.list.size
         this.list.addAll(list)
         notifyItemRangeInserted(prevSize, list.size)
     }
 
-    fun removeItem(item: MovieItem) {
+    fun removeItem(item: MovieItemLookFeel) {
         val index = list.indexOf(item)
         list.remove(item)
         notifyItemRemoved(index)

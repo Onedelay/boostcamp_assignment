@@ -1,15 +1,15 @@
 package com.onedelay.boostcampassignment.liked
 
-import com.onedelay.boostcampassignment.data.MovieItem
+import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 
 
 internal interface LikedMovieContract {
 
     interface View {
 
-        fun showMovieList(likedList: List<MovieItem>)
+        fun showMovieList(likedList: List<MovieItemLookFeel>)
 
-        fun updateRemovedList(item: MovieItem)
+        fun updateRemovedList(item: MovieItemLookFeel)
 
     }
 
@@ -17,7 +17,7 @@ internal interface LikedMovieContract {
 
         fun requestLikeMovieList()
 
-        fun selectDialogMenuOf(item: MovieItem, which: Int)
+        fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int)
 
     }
 
