@@ -6,16 +6,16 @@ import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.lang.ref.WeakReference
 
 
 internal class MainPresenter constructor(
-        private val view: MainContract.View,
+        private val weakView: WeakReference<MainContract.View>,
         private val movieRepository: MovieListRepository,
-        private val inMemoryDataHolder: InMemoryDataHolder
+        private val inMemoryDataHolder: InMemoryDataHolder,
+        private val disposable: CompositeDisposable
 
 ) : MainContract.Presenter {
-
-    private val disposable = CompositeDisposable()
 
     private var previousQuery = ""
     private var totalCount    = 0
@@ -23,13 +23,9 @@ internal class MainPresenter constructor(
     /** View 쪽에서 이것을 observe 하고있다면 뷰한테 변경을 notify 할 필요 없음 */
     private val movieList = ArrayList<MovieItemLookFeel>()
 
-    override fun onDestroy() {
-        disposable.clear()
-    }
-
     override fun checkNetworkStatus(status: Boolean): Boolean {
         if(!status) {
-            view.run {
+            getView()?.run {
                 showEmptyResult()
                 showToastMessage("인터넷 연결을 확인해주세요")
             }
@@ -46,7 +42,7 @@ internal class MainPresenter constructor(
                 requestMovies(1)
             }
         }  else {
-            view.run {
+            getView()?.run {
                 showEmptyResult()
                 showToastMessage("검색어를 입력해주세요")
             }
@@ -62,24 +58,24 @@ internal class MainPresenter constructor(
     override fun updateLikedMovie(item: MovieItemLookFeel) {
         if(!item.starred) {
             if(inMemoryDataHolder.addLikedMovie(item)) {
-                view.showToastMessage("즐겨찾기 목록에 추가되었습니다.")
+                getView()?.showToastMessage("즐겨찾기 목록에 추가되었습니다.")
             } else {
-                view.showToastMessage("오류가 발생했습니다.")
+                getView()?.showToastMessage("오류가 발생했습니다.")
             }
         } else {
             inMemoryDataHolder.removeLikedMovie(item)
-            view.showToastMessage("즐겨찾기 목록에서 삭제되었습니다.")
+            getView()?.showToastMessage("즐겨찾기 목록에서 삭제되었습니다.")
         }
 
         val position = movieList.indexOf(item)
         movieList[position].starred = !movieList[position].starred
 
-        view.notifyUpdateListItem(movieList[position])
+        getView()?.notifyUpdateListItem(movieList[position])
     }
 
     override fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int) {
         when(which) {
-            0 -> view.removeMovieItem(item)
+            0 -> getView()?.removeMovieItem(item)
 
             1 -> updateLikedMovie(item)
         }
@@ -88,12 +84,12 @@ internal class MainPresenter constructor(
     override fun notifyChangedLikedMovieList() {
         updateLikedMovie(this.movieList)
 
-        view.notifyUpdateList(this.movieList)
+        getView()?.notifyUpdateList(this.movieList)
     }
 
     private fun requestMovies(position: Int) {
         if(position == 1) {
-            view.showProgressBar()
+            getView()?.showProgressBar()
         }
 
         disposable.addAll(
@@ -109,18 +105,18 @@ internal class MainPresenter constructor(
 
                                         this.movieList.addAll(convertedList)
 
-                                        view.run {
+                                        getView()?.run {
                                             showResult()
                                             showMovieList(convertedList)
                                         }
 
                                     } else {
-                                        view.showEmptyResult()
+                                        getView()?.showEmptyResult()
                                     }
                                 },
                                 {
                                     it.printStackTrace()
-                                    view.run {
+                                    getView()?.run {
                                         showEmptyResult()
                                         showToastMessage("예상치 못한 오류가 발생했습니다.")
                                     }
@@ -137,4 +133,7 @@ internal class MainPresenter constructor(
 
     private fun checkIsLiked(movie: MovieItemLookFeel) = inMemoryDataHolder.getLikedMovieMap().containsKey(movie.link)
 
+    private fun getView(): MainContract.View? {
+        return weakView.get()
+    }
 }

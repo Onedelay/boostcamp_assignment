@@ -1,6 +1,7 @@
 package com.onedelay.boostcampassignment.main
 
 import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
+import java.lang.ref.WeakReference
 
 
 internal interface MainContract {
@@ -16,7 +17,6 @@ internal interface MainContract {
     }
 
     interface Presenter {
-        fun onDestroy()
         fun checkNetworkStatus(status: Boolean): Boolean
         fun requestMovies(query: String)
         fun loadMoreMovies(position: Int)

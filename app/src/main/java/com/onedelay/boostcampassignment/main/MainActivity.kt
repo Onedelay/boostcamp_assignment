@@ -21,7 +21,9 @@ import com.onedelay.boostcampassignment.liked.LikedMovieActivity
 import com.onedelay.boostcampassignment.result.WebViewActivity
 import com.onedelay.boostcampassignment.utils.Constants
 import com.onedelay.boostcampassignment.utils.Utils
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.ref.WeakReference
 
 
 internal class MainActivity : AppCompatActivity(), MovieViewHolder.ItemClickListener, MainContract.View {
@@ -34,18 +36,26 @@ internal class MainActivity : AppCompatActivity(), MovieViewHolder.ItemClickList
 
     private lateinit var searchResultAdapter: MovieAdapter
 
+    private val compositeDisposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter = MainPresenter(this, MovieListRepository(RetrofitApi), InMemoryDataHolder)
+        presenter = MainPresenter(
+                weakView           = WeakReference(this),
+                movieRepository    = MovieListRepository(RetrofitApi),
+                inMemoryDataHolder = InMemoryDataHolder,
+                disposable         = compositeDisposable
+        )
 
         initViews()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.onDestroy()
+
+        compositeDisposable.dispose()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -65,6 +75,7 @@ internal class MainActivity : AppCompatActivity(), MovieViewHolder.ItemClickList
                 startActivityForResult(Intent(this, LikedMovieActivity::class.java), REQUEST_CODE)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
