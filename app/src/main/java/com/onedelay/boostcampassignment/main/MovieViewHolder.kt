@@ -23,12 +23,11 @@ class MovieViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(item
     init {
 
         itemView.apply {
-            setOnClickListener {
-                listener?.onClick(item)
-            }
+            setOnClickListener { listener?.onClick(item) }
 
             setOnLongClickListener {
                 listener?.onLongClick(item)
+
                 true
             }
         }

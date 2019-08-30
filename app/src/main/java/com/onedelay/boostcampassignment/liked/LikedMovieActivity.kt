@@ -21,7 +21,6 @@ class LikedMovieActivity : AppCompatActivity(), MovieViewHolder.ItemClickListene
 
     companion object {
         const val RESULT_CODE_DATA_CHANGED = 1000
-        const val RESULT_CODE_DATA_UNCHANGED = -1000
     }
 
     private lateinit var adapter: LikedMovieAdapter
@@ -41,17 +40,19 @@ class LikedMovieActivity : AppCompatActivity(), MovieViewHolder.ItemClickListene
         val intent = Intent(this@LikedMovieActivity, WebViewActivity::class.java).apply {
             putExtra(Constants.URL, item.link)
         }
+
         startActivity(intent)
     }
 
     override fun onLongClick(item: MovieItemLookFeel) {
-        AlertDialog.Builder(this).apply {
-            setItems(
-                    arrayOf("삭제"),
-                    DialogInterface.OnClickListener { _, which ->
+        AlertDialog.Builder(this)
+                .apply {
+                    setItems(arrayOf("삭제"), DialogInterface.OnClickListener { _, which ->
                         presenter.selectDialogMenuOf(item, which)
                     })
-        }.create().show()
+                }
+                .create()
+                .show()
     }
 
     override fun showMovieList(likedList: List<MovieItemLookFeel>) {

@@ -24,9 +24,7 @@ import com.onedelay.boostcampassignment.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-internal class MainActivity
-
-    : AppCompatActivity(), MovieViewHolder.ItemClickListener, MainContract.View {
+internal class MainActivity : AppCompatActivity(), MovieViewHolder.ItemClickListener, MainContract.View {
 
     companion object {
         const val REQUEST_CODE = 1111

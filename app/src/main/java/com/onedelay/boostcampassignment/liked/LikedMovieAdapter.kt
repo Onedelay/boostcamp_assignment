@@ -10,9 +10,9 @@ import java.util.*
 
 
 internal class LikedMovieAdapter constructor(
-        private val listener: MovieViewHolder.ItemClickListener)
+        private val listener: MovieViewHolder.ItemClickListener
 
-    : RecyclerView.Adapter<MovieViewHolder>() {
+) : RecyclerView.Adapter<MovieViewHolder>() {
 
     private val list = ArrayList<MovieItemLookFeel>()
 
@@ -25,25 +25,32 @@ internal class LikedMovieAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(list[position])
+        if(holder.adapterPosition != RecyclerView.NO_POSITION) {
+            holder.bind(list[position])
+        }
     }
 
     override fun getItemCount() = list.size
 
     fun addItems(list: List<MovieItemLookFeel>) {
         val prevSize = this.list.size
+
         this.list.addAll(list)
+
         notifyItemRangeInserted(prevSize, list.size)
     }
 
     fun removeItem(item: MovieItemLookFeel) {
         val index = list.indexOf(item)
+
         list.remove(item)
+
         notifyItemRemoved(index)
     }
 
     fun clearItems() {
         list.clear()
+
         notifyDataSetChanged()
     }
 

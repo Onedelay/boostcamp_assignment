@@ -10,9 +10,9 @@ import java.util.*
 
 internal class MovieAdapter constructor(
         private val listener: MovieViewHolder.ItemClickListener,
-        private val onLoadMoreMovies: (Int) -> Unit)
+        private val onLoadMoreMovies: (Int) -> Unit
 
-    : RecyclerView.Adapter<MovieViewHolder>() {
+) : RecyclerView.Adapter<MovieViewHolder>() {
 
     private val list = ArrayList<MovieItemLookFeel>()
 
@@ -42,24 +42,31 @@ internal class MovieAdapter constructor(
 
     fun addItems(list: List<MovieItemLookFeel>) {
         val prevSize = this.list.size
+
         this.list.addAll(list)
+
         notifyItemRangeInserted(prevSize, list.size)
     }
 
     fun removeItem(item: MovieItemLookFeel) {
         val index = list.indexOf(item)
+
         list.remove(item)
+
         notifyItemRemoved(index)
     }
 
     fun clearItems() {
         list.clear()
+
         notifyDataSetChanged()
     }
 
     fun updateItem(item: MovieItemLookFeel) {
         val position = list.indexOf(item)
+
         list[position].starred = item.starred
+
         notifyItemChanged(position)
     }
 

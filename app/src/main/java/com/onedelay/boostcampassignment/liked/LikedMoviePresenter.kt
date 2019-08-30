@@ -15,6 +15,7 @@ internal class LikedMoviePresenter constructor(
             it.starred = false
             it
         }
+
         view.showMovieList(list)
     }
 
@@ -22,6 +23,7 @@ internal class LikedMoviePresenter constructor(
         when(which) {
             0 -> {
                 likedRepository.removeLikedMovie(item)
+
                 view.updateRemovedList(item)
             }
         }

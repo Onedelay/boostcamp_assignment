@@ -9,6 +9,7 @@ internal class MovieApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         Fabric.with(this, Crashlytics())
     }
 

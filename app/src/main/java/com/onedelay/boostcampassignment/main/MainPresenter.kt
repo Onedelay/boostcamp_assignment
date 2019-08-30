@@ -34,6 +34,7 @@ internal class MainPresenter constructor(
                 showToastMessage("인터넷 연결을 확인해주세요")
             }
         }
+
         return status
     }
 
@@ -78,18 +79,15 @@ internal class MainPresenter constructor(
 
     override fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int) {
         when(which) {
-            0 -> {
-                view.removeMovieItem(item)
-            }
+            0 -> view.removeMovieItem(item)
 
-            1 -> {
-                updateLikedMovie(item)
-            }
+            1 -> updateLikedMovie(item)
         }
     }
 
     override fun notifyChangedLikedMovieList() {
         updateLikedMovie(this.movieList)
+
         view.notifyUpdateList(this.movieList)
     }
 
@@ -98,37 +96,36 @@ internal class MainPresenter constructor(
             view.showProgressBar()
         }
 
-        movieRepository.fetchMovieList(query = previousQuery, start = position)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { movieList ->
-                            if(movieList.items.isNotEmpty()) {
-                                totalCount = movieList.total
+        disposable.addAll(
+                movieRepository.fetchMovieList(query = previousQuery, start = position)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                { movieList ->
+                                    if(movieList.items.isNotEmpty()) {
+                                        totalCount = movieList.total
 
-                                val convertedList = updateLikedMovie(movieList.convertToLookFeel())
+                                        val convertedList = updateLikedMovie(movieList.convertToLookFeel())
 
-                                this.movieList.addAll(convertedList)
+                                        this.movieList.addAll(convertedList)
 
-                                view.run {
-                                    showResult()
-                                    showMovieList(convertedList)
-                                }
+                                        view.run {
+                                            showResult()
+                                            showMovieList(convertedList)
+                                        }
 
-                            } else {
-                                view.showEmptyResult()
-                            }
-                        },
-                        {
-                            it.printStackTrace()
-                            view.run {
-                                showEmptyResult()
-                                showToastMessage("예상치 못한 오류가 발생했습니다.")
-                            }
-                        })
-                .also {
-                    disposable.add(it)
-                }
+                                    } else {
+                                        view.showEmptyResult()
+                                    }
+                                },
+                                {
+                                    it.printStackTrace()
+                                    view.run {
+                                        showEmptyResult()
+                                        showToastMessage("예상치 못한 오류가 발생했습니다.")
+                                    }
+                                })
+        )
     }
 
     private fun updateLikedMovie(list: List<MovieItemLookFeel>): List<MovieItemLookFeel> {
