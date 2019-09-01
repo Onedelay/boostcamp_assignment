@@ -7,9 +7,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.ref.WeakReference
+import javax.inject.Inject
 
 
-internal class MainPresenter constructor(
+internal class MainPresenter @Inject constructor(
         private val weakView: WeakReference<MainContract.View>,
         private val movieRepository: MovieListRepository,
         private val inMemoryDataHolder: InMemoryDataHolder,

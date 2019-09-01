@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
@@ -13,41 +12,34 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.onedelay.boostcampassignment.R
-import com.onedelay.boostcampassignment.data.InMemoryDataHolder
-import com.onedelay.boostcampassignment.data.MovieListRepository
 import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
-import com.onedelay.boostcampassignment.data.source.RetrofitApi
 import com.onedelay.boostcampassignment.liked.LikedMovieActivity
 import com.onedelay.boostcampassignment.result.WebViewActivity
 import com.onedelay.boostcampassignment.utils.Constants
 import com.onedelay.boostcampassignment.utils.Utils
+import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.ref.WeakReference
+import javax.inject.Inject
 
 
-internal class MainActivity : AppCompatActivity(), MovieViewHolder.ItemClickListener, MainContract.View {
+internal class MainActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemClickListener, MainContract.View {
 
     companion object {
         const val REQUEST_CODE = 1111
     }
 
-    private lateinit var presenter: MainContract.Presenter
+    @Inject
+    lateinit var presenter: MainContract.Presenter
+
+    @Inject
+    lateinit var compositeDisposable: CompositeDisposable
 
     private lateinit var searchResultAdapter: MovieAdapter
-
-    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        presenter = MainPresenter(
-                weakView           = WeakReference(this),
-                movieRepository    = MovieListRepository(RetrofitApi),
-                inMemoryDataHolder = InMemoryDataHolder,
-                disposable         = compositeDisposable
-        )
 
         initViews()
     }
