@@ -9,9 +9,9 @@ import javax.inject.Inject
 internal class MovieListRepository @Inject constructor(
         private val movieRemoteDataSource: RetrofitApi
 
-) {
+) : MainRepositoryApi {
 
-    fun fetchMovieList(query: String, start: Int): Single<MovieList> {
+    override fun fetchMovieList(query: String, start: Int): Single<MovieList> {
         return movieRemoteDataSource.service.requestMovieInfo(query, start)
     }
 

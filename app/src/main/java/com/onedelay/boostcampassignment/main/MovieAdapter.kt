@@ -8,21 +8,23 @@ import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import java.util.*
 
 
-internal class MovieAdapter constructor(
-        private val listener: MovieViewHolder.ItemClickListener,
-        private val onLoadMoreMovies: (Int) -> Unit
-
-) : RecyclerView.Adapter<MovieViewHolder>() {
+internal class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
 
     private val list = ArrayList<MovieItemLookFeel>()
 
     private val threshold = 5
 
+    private var listener: MovieViewHolder.ItemClickListener? = null
+
+    private var loadMoreMoviesCallback: ((Int) -> Unit)? = null
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.viewholder_item, viewGroup, false)
 
         return MovieViewHolder(view).apply {
-            setItemClickListener(listener)
+            if(listener != null) {
+                setItemClickListener(listener)
+            }
         }
     }
 
@@ -32,13 +34,21 @@ internal class MovieAdapter constructor(
          * 26 번째 위치에 있을 때 31 번째 데이터 요청
          */
         if(position == itemCount - threshold) {
-            onLoadMoreMovies(itemCount + 1)
+            loadMoreMoviesCallback?.invoke(itemCount + 1)
         }
 
         holder.bind(list[position])
     }
 
     override fun getItemCount() = list.size
+
+    fun setListener(listener: MovieViewHolder.ItemClickListener) {
+        this.listener = listener
+    }
+
+    fun setLoadMoreMoviesCallback(callback: (Int) -> Unit) {
+        this.loadMoreMoviesCallback = callback
+    }
 
     fun addItems(list: List<MovieItemLookFeel>) {
         val prevSize = this.list.size

@@ -1,7 +1,7 @@
 package com.onedelay.boostcampassignment.main
 
 import com.onedelay.boostcampassignment.data.InMemoryDataHolder
-import com.onedelay.boostcampassignment.data.MovieListRepository
+import com.onedelay.boostcampassignment.data.MainRepositoryApi
 import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 internal class MainPresenter @Inject constructor(
         private val weakView: WeakReference<MainContract.View>,
-        private val movieRepository: MovieListRepository,
+        private val movieRepository: MainRepositoryApi,
         private val inMemoryDataHolder: InMemoryDataHolder,
         private val disposable: CompositeDisposable
 

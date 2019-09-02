@@ -1,5 +1,7 @@
 package com.onedelay.boostcampassignment.main
 
+import com.onedelay.boostcampassignment.data.MainRepositoryApi
+import com.onedelay.boostcampassignment.data.MovieListRepository
 import com.onedelay.boostcampassignment.di.scope.ActivityScope
 import dagger.Binds
 import dagger.Module
@@ -27,9 +29,19 @@ internal interface MainModule {
         fun provideMainActivity(activity: MainActivity): WeakReference<MainContract.View> {
             return WeakReference(activity)
         }
+
+        @Provides
+        @ActivityScope
+        fun provideMovieListAdapter(): MovieAdapter {
+            return MovieAdapter()
+        }
     }
 
     @Binds
     @ActivityScope
     fun provideMainPresenter(presenter: MainPresenter): MainContract.Presenter
+
+    @Binds
+    @ActivityScope
+    fun provideRepository(repository: MovieListRepository): MainRepositoryApi
 }

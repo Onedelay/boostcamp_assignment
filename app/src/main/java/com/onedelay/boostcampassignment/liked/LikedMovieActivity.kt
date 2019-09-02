@@ -25,10 +25,9 @@ internal class LikedMovieActivity : DaggerAppCompatActivity(), MovieViewHolder.I
         const val RESULT_CODE_DATA_CHANGED = 1000
     }
 
-    @Inject
-    lateinit var presenter: LikedMovieContract.Presenter
+    @Inject lateinit var presenter: LikedMovieContract.Presenter
 
-    private lateinit var adapter: LikedMovieAdapter
+    @Inject lateinit var adapter: LikedMovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +72,7 @@ internal class LikedMovieActivity : DaggerAppCompatActivity(), MovieViewHolder.I
     }
 
     private fun initList() {
-        adapter = LikedMovieAdapter(this)
-
+        adapter.setListener(this)
         val linearLayoutManager = LinearLayoutManager(baseContext)
 
         recyclerView.apply {

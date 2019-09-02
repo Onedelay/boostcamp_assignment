@@ -9,12 +9,11 @@ import com.onedelay.boostcampassignment.main.MovieViewHolder
 import java.util.*
 
 
-internal class LikedMovieAdapter constructor(
-        private val listener: MovieViewHolder.ItemClickListener
-
-) : RecyclerView.Adapter<MovieViewHolder>() {
+internal class LikedMovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
 
     private val list = ArrayList<MovieItemLookFeel>()
+
+    private var listener: MovieViewHolder.ItemClickListener? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.viewholder_item, viewGroup, false)
@@ -31,6 +30,10 @@ internal class LikedMovieAdapter constructor(
     }
 
     override fun getItemCount() = list.size
+
+    fun setListener(listener: MovieViewHolder.ItemClickListener) {
+        this.listener = listener
+    }
 
     fun addItems(list: List<MovieItemLookFeel>) {
         val prevSize = this.list.size

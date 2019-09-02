@@ -29,13 +29,11 @@ internal class MainActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemCli
         const val REQUEST_CODE = 1111
     }
 
-    @Inject
-    lateinit var presenter: MainContract.Presenter
+    @Inject lateinit var presenter: MainContract.Presenter
 
-    @Inject
-    lateinit var compositeDisposable: CompositeDisposable
+    @Inject lateinit var compositeDisposable: CompositeDisposable
 
-    private lateinit var searchResultAdapter: MovieAdapter
+    @Inject lateinit var searchResultAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,8 +133,11 @@ internal class MainActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemCli
     }
 
     private fun initAdapter() {
-        searchResultAdapter = MovieAdapter(this) { position ->
-            presenter.loadMoreMovies(position) // FIXME: 가독성이 떨어지는 것 같기도 함, 추후에 어댑터에 인터페이스 추가하게되면 번거로움
+        searchResultAdapter.apply {
+            setListener(this@MainActivity)
+            setLoadMoreMoviesCallback { position ->
+                presenter.loadMoreMovies(position)
+            }
         }
 
         val linearLayoutManager = LinearLayoutManager(baseContext)

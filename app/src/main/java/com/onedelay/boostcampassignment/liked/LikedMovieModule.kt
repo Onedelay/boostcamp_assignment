@@ -19,6 +19,12 @@ internal interface LikedMovieModule {
         fun provideLikedActivity(activity: LikedMovieActivity): WeakReference<LikedMovieContract.View> {
             return WeakReference(activity)
         }
+
+        @Provides
+        @ActivityScope
+        fun provideLikedMovieAdapter(): LikedMovieAdapter {
+            return LikedMovieAdapter()
+        }
     }
 
     @Binds

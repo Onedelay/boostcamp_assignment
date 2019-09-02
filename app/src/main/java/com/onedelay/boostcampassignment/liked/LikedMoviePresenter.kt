@@ -8,12 +8,12 @@ import javax.inject.Inject
 
 internal class LikedMoviePresenter @Inject constructor(
         private val weakView: WeakReference<LikedMovieContract.View>,
-        private val likedRepository: InMemoryDataHolder
+        private val inMemoryDataHolder: InMemoryDataHolder
 
 ) : LikedMovieContract.Presenter {
 
     override fun requestLikeMovieList() {
-        val list = likedRepository.getLikedMovieList().map {
+        val list = inMemoryDataHolder.getLikedMovieList().map {
             it.starred = false
             it
         }
@@ -24,7 +24,7 @@ internal class LikedMoviePresenter @Inject constructor(
     override fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int) {
         when(which) {
             0 -> {
-                likedRepository.removeLikedMovie(item)
+                inMemoryDataHolder.removeLikedMovie(item)
 
                 getView()?.updateRemovedList(item)
             }

@@ -34,7 +34,7 @@ class MovieViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(item
 
     }
 
-    fun setItemClickListener(listener: ItemClickListener) {
+    fun setItemClickListener(listener: ItemClickListener?) {
         this.listener = listener
     }
 
