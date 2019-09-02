@@ -2,10 +2,12 @@ package com.onedelay.boostcampassignment.liked
 
 import com.onedelay.boostcampassignment.data.InMemoryDataHolder
 import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
+import java.lang.ref.WeakReference
+import javax.inject.Inject
 
 
-internal class LikedMoviePresenter constructor(
-        private val view: LikedMovieContract.View,
+internal class LikedMoviePresenter @Inject constructor(
+        private val weakView: WeakReference<LikedMovieContract.View>,
         private val likedRepository: InMemoryDataHolder
 
 ) : LikedMovieContract.Presenter {
@@ -16,7 +18,7 @@ internal class LikedMoviePresenter constructor(
             it
         }
 
-        view.showMovieList(list)
+        getView()?.showMovieList(list)
     }
 
     override fun selectDialogMenuOf(item: MovieItemLookFeel, which: Int) {
@@ -24,9 +26,13 @@ internal class LikedMoviePresenter constructor(
             0 -> {
                 likedRepository.removeLikedMovie(item)
 
-                view.updateRemovedList(item)
+                getView()?.updateRemovedList(item)
             }
         }
+    }
+
+    private fun getView(): LikedMovieContract.View? {
+        return weakView.get()
     }
 
 }

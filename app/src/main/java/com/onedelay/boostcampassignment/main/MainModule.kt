@@ -9,7 +9,9 @@ import java.lang.ref.WeakReference
 
 
 @Module(
-        includes = [MainModule.ProvideModule::class]
+        includes = [
+            MainModule.ProvideModule::class
+        ]
 )
 internal interface MainModule {
     @Module

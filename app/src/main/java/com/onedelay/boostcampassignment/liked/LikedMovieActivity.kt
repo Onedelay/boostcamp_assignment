@@ -14,24 +14,25 @@ import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import com.onedelay.boostcampassignment.main.MovieViewHolder
 import com.onedelay.boostcampassignment.result.WebViewActivity
 import com.onedelay.boostcampassignment.utils.Constants
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
-class LikedMovieActivity : AppCompatActivity(), MovieViewHolder.ItemClickListener, LikedMovieContract.View {
+internal class LikedMovieActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemClickListener, LikedMovieContract.View {
 
     companion object {
         const val RESULT_CODE_DATA_CHANGED = 1000
     }
 
-    private lateinit var adapter: LikedMovieAdapter
+    @Inject
+    lateinit var presenter: LikedMovieContract.Presenter
 
-    private lateinit var presenter: LikedMovieContract.Presenter
+    private lateinit var adapter: LikedMovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liked)
-
-        presenter = LikedMoviePresenter(this, InMemoryDataHolder)
 
         initViews()
     }

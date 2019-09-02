@@ -15,6 +15,7 @@ internal interface ActivityInjectionModule {
     @ContributesAndroidInjector(modules = [MainModule::class])
     fun mainActivity(): MainActivity
 
+    @ActivityScope
     @ContributesAndroidInjector(modules = [LikedMovieModule::class])
     fun likedMovieActivity(): LikedMovieActivity
 }
