@@ -1,7 +1,6 @@
 package com.onedelay.boostcampassignment.main
 
 import com.onedelay.boostcampassignment.data.InMemoryDataHolder
-import com.onedelay.boostcampassignment.data.MainRepositoryApi
 import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -93,8 +92,10 @@ internal class MainPresenter @Inject constructor(
             getView()?.showProgressBar()
         }
 
+        val fetchMovieListEvent = movieRepository.fetchMovieList(query = previousQuery, start = position)
+
         disposable.addAll(
-                movieRepository.fetchMovieList(query = previousQuery, start = position)
+                fetchMovieListEvent
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -107,7 +108,6 @@ internal class MainPresenter @Inject constructor(
                                         this.movieList.addAll(convertedList)
 
                                         getView()?.run {
-                                            showResult()
                                             showMovieList(convertedList)
                                         }
 

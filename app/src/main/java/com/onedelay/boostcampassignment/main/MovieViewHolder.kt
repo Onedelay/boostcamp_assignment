@@ -6,7 +6,7 @@ import android.text.Html
 import android.view.View
 import com.bumptech.glide.Glide
 import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
-import kotlinx.android.synthetic.main.viewholder_item.view.*
+import kotlinx.android.synthetic.main.view_movie_item.view.*
 
 
 class MovieViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {

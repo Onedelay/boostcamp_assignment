@@ -16,7 +16,7 @@ internal class LikedMovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
     private var listener: MovieViewHolder.ItemClickListener? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MovieViewHolder {
-        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.viewholder_item, viewGroup, false)
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.view_movie_item, viewGroup, false)
 
         return MovieViewHolder(view).apply {
             setItemClickListener(listener)

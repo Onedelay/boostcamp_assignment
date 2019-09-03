@@ -33,7 +33,7 @@ internal class MainActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemCli
 
     @Inject lateinit var compositeDisposable: CompositeDisposable
 
-    @Inject lateinit var searchResultAdapter: MovieAdapter
+    @Inject lateinit var searchResultAdapter: MainAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,16 +90,16 @@ internal class MainActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemCli
     }
 
     override fun showProgressBar() {
-        progressBar.visibility = View.VISIBLE
+        pb_loading.visibility = View.VISIBLE
     }
 
     override fun showResult() {
-        progressBar.visibility = View.GONE
+        pb_loading.visibility = View.GONE
         tv_content.visibility = View.GONE
     }
 
     override fun showEmptyResult() {
-        progressBar.visibility = View.GONE
+        pb_loading.visibility = View.GONE
         tv_content.visibility = View.VISIBLE
     }
 
@@ -122,11 +122,11 @@ internal class MainActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemCli
     private fun initViews() {
         initAdapter()
 
-        button.setOnClickListener {
+        b_search.setOnClickListener {
             requestButton()
         }
 
-        editText.setOnEditorActionListener { _, _, _ ->
+        et_movie.setOnEditorActionListener { _, _, _ ->
             requestButton()
             true
         }
@@ -142,7 +142,7 @@ internal class MainActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemCli
 
         val linearLayoutManager = LinearLayoutManager(baseContext)
 
-        recyclerView.apply {
+        rv_movie_list.apply {
             adapter = this@MainActivity.searchResultAdapter
             layoutManager = linearLayoutManager
 
@@ -154,13 +154,13 @@ internal class MainActivity : DaggerAppCompatActivity(), MovieViewHolder.ItemCli
 
     private fun requestButton() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(editText.windowToken, 0)
+        imm.hideSoftInputFromWindow(et_movie.windowToken, 0)
 
         val isNetworkAlive = presenter.checkNetworkStatus(Utils.isNetworkConnected(this))
 
         if(isNetworkAlive) {
             searchResultAdapter.clearItems()
-            presenter.requestMovies(editText.text.toString())
+            presenter.requestMovies(et_movie.text.toString())
         }
     }
 

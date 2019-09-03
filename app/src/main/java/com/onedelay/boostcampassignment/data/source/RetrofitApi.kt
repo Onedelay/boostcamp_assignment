@@ -6,7 +6,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-object RetrofitApi {
+internal object RetrofitApi {
 
     private const val BASE_URL = "https://openapi.naver.com/"
 

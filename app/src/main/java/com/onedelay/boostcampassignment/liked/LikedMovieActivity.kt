@@ -4,12 +4,10 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.Toast
 import com.onedelay.boostcampassignment.R
-import com.onedelay.boostcampassignment.data.InMemoryDataHolder
 import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import com.onedelay.boostcampassignment.main.MovieViewHolder
 import com.onedelay.boostcampassignment.result.WebViewActivity
@@ -75,7 +73,7 @@ internal class LikedMovieActivity : DaggerAppCompatActivity(), MovieViewHolder.I
         adapter.setListener(this)
         val linearLayoutManager = LinearLayoutManager(baseContext)
 
-        recyclerView.apply {
+        rv_movie_list.apply {
             adapter       = this@LikedMovieActivity.adapter
             layoutManager = linearLayoutManager
 

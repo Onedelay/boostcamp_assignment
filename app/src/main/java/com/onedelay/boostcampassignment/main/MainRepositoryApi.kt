@@ -1,4 +1,4 @@
-package com.onedelay.boostcampassignment.data
+package com.onedelay.boostcampassignment.main
 
 import com.onedelay.boostcampassignment.data.dto.MovieList
 import io.reactivex.Single

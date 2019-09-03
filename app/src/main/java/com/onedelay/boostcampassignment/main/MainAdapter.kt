@@ -8,7 +8,7 @@ import com.onedelay.boostcampassignment.data.looknfeel.MovieItemLookFeel
 import java.util.*
 
 
-internal class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
+internal class MainAdapter : RecyclerView.Adapter<MovieViewHolder>() {
 
     private val list = ArrayList<MovieItemLookFeel>()
 
@@ -19,7 +19,7 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
     private var loadMoreMoviesCallback: ((Int) -> Unit)? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MovieViewHolder {
-        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.viewholder_item, viewGroup, false)
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.view_movie_item, viewGroup, false)
 
         return MovieViewHolder(view).apply {
             if(listener != null) {
