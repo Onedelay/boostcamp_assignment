@@ -11,7 +11,6 @@ import com.onedelay.boostcampassignment.movie.dto.MovieLooknFeel
 import com.onedelay.boostcampassignment.movie.dto.MovieNavigation
 import com.onedelay.boostcampassignment.movie.dto.MovieViewAction
 import com.onedelay.boostcampassignment.movie.repository.MovieRepositoryApi
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -43,18 +42,34 @@ internal class MovieViewModel @Inject constructor(
         val clickActionSearch = channel.ofViewAction().ofType(MovieViewAction.Click.ActionSearch::class.java)
 
         val clickOptionMenuLike = channel.ofViewAction().ofType(MovieViewAction.Click.OptionMenuLike::class.java)
+
+        val loadMoreMovieList = channel.ofViewAction().ofType(MovieViewAction.LoadMore::class.java)
+
+        val clickMovieItemElement = channel.ofViewAction().ofType(MovieViewAction.Click.ItemElement::class.java)
+
+        // TODO: repository 에 Like 정보를 저장하는 데이터 홀더 추가한 후 처리하면 될 듯
+        val clickMovieLike = channel.ofViewAction().ofType(MovieViewAction.Click.LikeMovie::class.java)
+
+        // FIXME: 어댑터에서만 삭제하는 데이터라면 필요없는 채널
+        val clickMovieRemove = channel.ofViewAction().ofType(MovieViewAction.Click.RemoveMovie::class.java)
     }
 
     inner class DataInput {
         val movieListFetched = channel.ofData().ofType(MovieDataEvent.MovieListFetched::class.java)
+
+        val moreMovieListFetched = channel.ofData().ofType(MovieDataEvent.MoreMovieListFetched::class.java)
     }
 
     inner class LooknFeelOutput {
         val bindMovieList = dataInput.movieListFetched
+
+        val bindMoreMovieList = dataInput.moreMovieListFetched
     }
 
     inner class NavigationOutput {
         val navigateToLikeActivity = viewActionInput.clickOptionMenuLike
+
+        val navigateToWebViewActivity = viewActionInput.clickMovieItemElement
     }
 
     init {
@@ -71,7 +86,11 @@ internal class MovieViewModel @Inject constructor(
             arrayOf(
                     bindMovieList
                             .doOnError { Log.d("MY_LOG", "${it.printStackTrace()}") }
-                            .subscribe { channel.accept(MovieLooknFeel.BindMovieRecyclerView(transform(it.movieList))) }
+                            .subscribe { channel.accept(MovieLooknFeel.BindMovieRecyclerView(transform(it.movieList))) },
+
+                    bindMoreMovieList
+                            .doOnError { Log.d("MY_LOG", "${it.printStackTrace()}") }
+                            .subscribe { channel.accept(MovieLooknFeel.BindMoreMovieRecyclerView(transform(it.movieList))) }
             )
         }
     }
@@ -80,7 +99,9 @@ internal class MovieViewModel @Inject constructor(
         return navigationOutput.run {
             arrayOf(
                     navigateToLikeActivity
-                            .subscribe { channel.accept(MovieNavigation.ToLikeActivity()) }
+                            .subscribe { channel.accept(MovieNavigation.ToLikeActivity()) },
+                    navigateToWebViewActivity
+                            .subscribe { channel.accept(MovieNavigation.ToWebViewActivity(movieLink = it.movieLink)) }
             )
         }
     }
