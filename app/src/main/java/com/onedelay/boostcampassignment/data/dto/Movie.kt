@@ -9,4 +9,6 @@ internal class Movie(
         val director: String,
         val actor: String,
         val userRating: String
-)
+) {
+    var starred = false
+}

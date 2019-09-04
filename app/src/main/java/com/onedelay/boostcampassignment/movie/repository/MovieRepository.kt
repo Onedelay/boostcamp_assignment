@@ -31,6 +31,18 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
                         movieDataSource.fetchMovies(movieName = it.second, start = it.first.start)
                     }
 
+            val publishMovieLike = viewActionInput.clickMovieLike
+                    .observeOn(Schedulers.io())
+                    .switchMap {
+                        movieDataSource.publishMovieLike(link = it.item.link, starred = it.item.starred)
+                    }
+
+            val publishMovieDelete = viewActionInput.clickMovieRemove
+                    .observeOn(Schedulers.io())
+                    .switchMap {
+                        movieDataSource.publishMovieDelete(link = it.item.link)
+                    }
+
             disposable.addAll(
                     fetchMoviesCall
                             .observeOn(AndroidSchedulers.mainThread())
@@ -39,7 +51,15 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
 
                     fetchMoreMovies
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { channel.accept(MovieDataEvent.MoreMovieListFetched(it)) }
+                            .subscribe { channel.accept(MovieDataEvent.MoreMovieListFetched(it)) },
+
+                    publishMovieLike
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {  },
+
+                    publishMovieDelete
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {  }
             )
         }
     }

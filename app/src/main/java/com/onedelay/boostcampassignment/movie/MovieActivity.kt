@@ -13,7 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import com.onedelay.boostcampassignment.ActivityLifeCycleState
 import com.onedelay.boostcampassignment.BaseActivity
 import com.onedelay.boostcampassignment.R
-import com.onedelay.boostcampassignment.liked.LikedMovieActivity
+import com.onedelay.boostcampassignment.like.LikeActivity
 import com.onedelay.boostcampassignment.movie.custom.MovieLayout
 import com.onedelay.boostcampassignment.movie.dto.MovieLooknFeel
 import com.onedelay.boostcampassignment.movie.dto.MovieNavigation
@@ -90,7 +90,7 @@ internal class MovieActivity : BaseActivity() {
                             .doOnError { Log.d("MY_LOG", "${it.printStackTrace()}") }
                             .subscribe {
                                 when(it) {
-                                    is MovieNavigation.ToLikeActivity -> startActivity(Intent(this@MovieActivity, LikedMovieActivity::class.java))
+                                    is MovieNavigation.ToLikeActivity -> startActivity(Intent(this@MovieActivity, LikeActivity::class.java))
                                 }
                             },
                     channel.ofNavigation()

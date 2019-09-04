@@ -47,10 +47,8 @@ internal class MovieViewModel @Inject constructor(
 
         val clickMovieItemElement = channel.ofViewAction().ofType(MovieViewAction.Click.ItemElement::class.java)
 
-        // TODO: repository 에 Like 정보를 저장하는 데이터 홀더 추가한 후 처리하면 될 듯
         val clickMovieLike = channel.ofViewAction().ofType(MovieViewAction.Click.LikeMovie::class.java)
 
-        // FIXME: 어댑터에서만 삭제하는 데이터라면 필요없는 채널
         val clickMovieRemove = channel.ofViewAction().ofType(MovieViewAction.Click.RemoveMovie::class.java)
     }
 

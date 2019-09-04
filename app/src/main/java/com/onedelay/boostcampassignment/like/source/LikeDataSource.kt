@@ -1,8 +1,19 @@
 package com.onedelay.boostcampassignment.like.source
 
+import com.onedelay.boostcampassignment.data.dto.Movie
+import com.onedelay.boostcampassignment.fly.FlyApi
+import io.reactivex.Observable
 import javax.inject.Inject
 
 
-internal class LikeDataSource @Inject constructor() : LikeDataSourceApi {
+internal class LikeDataSource @Inject constructor(
+        private val fly: FlyApi
+) : LikeDataSourceApi {
+
+    override fun fetchLikedMovies(): Observable<List<Movie>> {
+        return Observable.just(
+                fly.fetchLikedMovieList()
+        )
+    }
 
 }

@@ -19,8 +19,8 @@ internal class MovieItem(
         return MovieItemLookFeel(title, link, image, pubDate, director, actor, userRating)
     }
 
-    fun convertToMovie(): MovieListEntity.Movie {
-        return MovieListEntity.Movie(
+    fun convertToMovie(): MovieListEntity.MovieEntity {
+        return MovieListEntity.MovieEntity(
                 title      = this.title,
                 link       = this.link,
                 image      = this.image,

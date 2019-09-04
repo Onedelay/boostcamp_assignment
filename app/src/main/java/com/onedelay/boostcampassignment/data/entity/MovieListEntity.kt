@@ -2,12 +2,12 @@ package com.onedelay.boostcampassignment.data.entity
 
 
 internal class MovieListEntity(
-        val items: List<Movie>,
+        val items: List<MovieEntity>,
         val total: Int
 
 ) {
 
-    class Movie(
+    class MovieEntity(
             val title: String,
             val link: String,
             val image: String,
