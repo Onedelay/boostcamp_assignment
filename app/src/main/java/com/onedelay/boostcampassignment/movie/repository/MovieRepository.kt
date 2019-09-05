@@ -1,6 +1,5 @@
 package com.onedelay.boostcampassignment.movie.repository
 
-import android.util.Log
 import com.onedelay.boostcampassignment.extension.pairWithLatestFrom
 import com.onedelay.boostcampassignment.movie.MovieViewModel
 import com.onedelay.boostcampassignment.movie.dto.MovieDataEvent
@@ -37,7 +36,7 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
                         movieDataSource.publishMovieLike(link = it.item.link, starred = it.item.starred)
                     }
 
-            val publishMovieDelete = viewActionInput.clickMovieRemove
+            val publishMovieRemove = viewActionInput.clickMovieRemove
                     .observeOn(Schedulers.io())
                     .switchMap {
                         movieDataSource.publishMovieDelete(link = it.item.link)
@@ -46,7 +45,6 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
             disposable.addAll(
                     fetchMoviesCall
                             .observeOn(AndroidSchedulers.mainThread())
-                            .doOnError { Log.d("MovieRepository", "${it.printStackTrace()}") }
                             .subscribe { channel.accept(MovieDataEvent.MovieListFetched(it)) },
 
                     fetchMoreMovies
@@ -55,11 +53,11 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
 
                     publishMovieLike
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {  },
+                            .subscribe { channel.accept(MovieDataEvent.MovieItemUpdated(it)) },
 
-                    publishMovieDelete
+                    publishMovieRemove
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {  }
+                            .subscribe { channel.accept(MovieDataEvent.MovieItemRemoved(it)) }
             )
         }
     }

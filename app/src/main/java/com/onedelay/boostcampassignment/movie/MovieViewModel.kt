@@ -56,12 +56,20 @@ internal class MovieViewModel @Inject constructor(
         val movieListFetched = channel.ofData().ofType(MovieDataEvent.MovieListFetched::class.java)
 
         val moreMovieListFetched = channel.ofData().ofType(MovieDataEvent.MoreMovieListFetched::class.java)
+
+        val movieItemUpdated = channel.ofData().ofType(MovieDataEvent.MovieItemUpdated::class.java)
+
+        val movieItemRemoved = channel.ofData().ofType(MovieDataEvent.MovieItemRemoved::class.java)
     }
 
     inner class LooknFeelOutput {
         val bindMovieList = dataInput.movieListFetched
 
         val bindMoreMovieList = dataInput.moreMovieListFetched
+
+        val bindUpdatedMovieItem = dataInput.movieItemUpdated
+
+        val bindRemovedMovieItem = dataInput.movieItemRemoved
     }
 
     inner class NavigationOutput {
@@ -88,7 +96,13 @@ internal class MovieViewModel @Inject constructor(
 
                     bindMoreMovieList
                             .doOnError { Log.d("MY_LOG", "${it.printStackTrace()}") }
-                            .subscribe { channel.accept(MovieLooknFeel.BindMoreMovieRecyclerView(transform(it.movieList))) }
+                            .subscribe { channel.accept(MovieLooknFeel.BindMoreMovieRecyclerView(transform(it.movieList))) },
+
+                    bindUpdatedMovieItem
+                            .subscribe { channel.accept(MovieLooknFeel.BindUpdatedMovieItem(it.movieItem.toLooknFeel())) },
+
+                    bindRemovedMovieItem
+                            .subscribe { channel.accept(MovieLooknFeel.BindUpdatedMovieItem(it.movieItem.toLooknFeel())) }
             )
         }
     }
@@ -116,6 +130,18 @@ internal class MovieViewModel @Inject constructor(
                     userRating = it.userRating
             )
         }
+    }
+
+    private fun Movie.toLooknFeel(): MovieLayout.LooknFeel {
+        return MovieLayout.LooknFeel(
+                title      = title,
+                link       = link,
+                image      = image,
+                pubDate    = pubDate,
+                director   = director,
+                actor      = actor,
+                userRating = userRating
+        )
     }
 
 }

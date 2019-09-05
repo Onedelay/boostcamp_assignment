@@ -64,15 +64,15 @@ internal class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieVi
     }
 
     fun removeItem(item: MovieLayout.LooknFeel) {
-        val index = movieLooknFeelList.indexOf(item)
+        val index = movieLooknFeelList.indexOfFirst { it.link == item.link }
 
-        this.movieLooknFeelList.remove(item)
+        this.movieLooknFeelList.removeAt(index)
 
         notifyItemRemoved(index)
     }
 
     fun updateItem(item: MovieLayout.LooknFeel) {
-        val position = movieLooknFeelList.indexOf(item)
+        val position = movieLooknFeelList.indexOfFirst { it.link == item.link }
 
         this.movieLooknFeelList[position].starred = !item.starred
 

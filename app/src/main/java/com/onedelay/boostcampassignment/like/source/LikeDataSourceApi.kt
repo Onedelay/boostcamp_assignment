@@ -6,4 +6,6 @@ import io.reactivex.Observable
 
 internal interface LikeDataSourceApi {
     fun fetchLikedMovies(): Observable<List<Movie>>
+
+    fun removeLikedMovie(link: String): Observable<Movie>
 }

@@ -16,4 +16,8 @@ internal class LikeDataSource @Inject constructor(
         )
     }
 
+    override fun removeLikedMovie(link: String): Observable<Movie> {
+        return fly.publishRemovingLikeMovie(link)
+    }
+
 }

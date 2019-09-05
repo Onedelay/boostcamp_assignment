@@ -18,10 +18,18 @@ internal class LikeRepository @Inject constructor(
                         dataSource.fetchLikedMovies()
                     }
 
+            val removeLikedMovies = viewActionInput.clickMovieRemove
+                    .switchMap {
+                        dataSource.removeLikedMovie(link = it.item.link)
+                    }
+
             disposable.addAll(
                     fetchLikedMovies
+                            .subscribe { channel.accept(LikeDataEvent.LikedMovieListFetched(it)) },
+
+                    removeLikedMovies
                             .subscribe {
-                                channel.accept(LikeDataEvent.LikedMovieListFetched(it))
+                                channel.accept(LikeDataEvent.LikedMovieItemRemoved(it))
                             }
             )
         }

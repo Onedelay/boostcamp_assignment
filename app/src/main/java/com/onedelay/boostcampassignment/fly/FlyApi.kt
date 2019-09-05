@@ -1,6 +1,7 @@
 package com.onedelay.boostcampassignment.fly
 
 import com.onedelay.boostcampassignment.data.dto.Movie
+import io.reactivex.Observable
 
 
 internal interface FlyApi {
@@ -9,7 +10,7 @@ internal interface FlyApi {
     fun publishMovieList(movieList: List<Movie>)
     fun publishAddingMovieList(movieList: List<Movie>)
     fun publishToggleMovie(link: String)
-    fun publishAddingLikeMovie(link: String)
-    fun publishRemovingLikeMovie(link: String)
-    fun publishDeletingMovie(link: String)
+    fun publishAddingLikeMovie(link: String): Observable<Movie>
+    fun publishRemovingLikeMovie(link: String): Observable<Movie>
+    fun publishDeletingMovie(link: String): Movie
 }

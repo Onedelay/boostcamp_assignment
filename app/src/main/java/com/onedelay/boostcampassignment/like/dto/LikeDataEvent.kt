@@ -7,4 +7,6 @@ internal sealed class LikeDataEvent {
 
     class LikedMovieListFetched(val likedMovieList: List<Movie>) : LikeDataEvent()
 
+    class LikedMovieItemRemoved(val likedMovie: Movie) : LikeDataEvent()
+
 }

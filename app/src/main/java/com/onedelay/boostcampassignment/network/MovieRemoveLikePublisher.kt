@@ -12,9 +12,7 @@ internal class MovieRemoveLikePublisher @Inject constructor(
 ) {
 
     fun publish(link: String): Observable<Movie> {
-        fly.publishRemovingLikeMovie(link)
-
-        return Observable.just(fly.fetchMovieList().first { it.link == link })
+        return fly.publishRemovingLikeMovie(link)
     }
 
 }

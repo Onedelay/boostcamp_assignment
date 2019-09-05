@@ -12,9 +12,7 @@ internal class MovieLikePublisher @Inject constructor(
 ) {
 
     fun publish(link: String): Observable<Movie> {
-        fly.publishAddingLikeMovie(link)
-
-        return Observable.just(fly.fetchMovieList().first { it.link == link })
+        return fly.publishAddingLikeMovie(link)
     }
 
 }

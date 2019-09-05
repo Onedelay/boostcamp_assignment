@@ -74,9 +74,13 @@ internal class MovieActivity : BaseActivity() {
                             .doOnError { Log.d("MY_LOG", "${it.printStackTrace()}") }
                             .subscribe {
                                 when(it) {
-                                    is  MovieLooknFeel.BindMovieRecyclerView -> bindMovieList(it)
+                                    is MovieLooknFeel.BindMovieRecyclerView -> bindMovieList(it)
 
-                                    is  MovieLooknFeel.BindMoreMovieRecyclerView -> bindMoreMovieList(it)
+                                    is MovieLooknFeel.BindMoreMovieRecyclerView -> bindMoreMovieList(it)
+
+                                    is MovieLooknFeel.BindUpdatedMovieItem -> adapter.updateItem(it.movieItem)
+
+                                    is MovieLooknFeel.BindRemovedMovieItem -> adapter.removeItem(it.movieItem)
                                 }
                             }
             )
@@ -87,19 +91,17 @@ internal class MovieActivity : BaseActivity() {
         with(viewModel) {
             activityScopeCompositeDisposable.addAll(
                     channel.ofNavigation()
-                            .doOnError { Log.d("MY_LOG", "${it.printStackTrace()}") }
                             .subscribe {
                                 when(it) {
-                                    is MovieNavigation.ToLikeActivity -> startActivity(Intent(this@MovieActivity, LikeActivity::class.java))
-                                }
-                            },
-                    channel.ofNavigation()
-                            .subscribe {
-                                when(it) {
+                                    is MovieNavigation.ToLikeActivity -> {
+                                        startActivity(Intent(this@MovieActivity, LikeActivity::class.java))
+                                    }
+
                                     is MovieNavigation.ToWebViewActivity -> {
                                         val intent = Intent(this@MovieActivity, WebViewActivity::class.java).apply {
                                             putExtra(Constants.URL, it.movieLink)
                                         }
+
                                         startActivity(intent)
                                     }
                                 }

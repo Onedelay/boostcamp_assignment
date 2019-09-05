@@ -7,4 +7,8 @@ internal sealed class MovieLooknFeel {
     class BindMovieRecyclerView(val movieLooknFeelList: List<MovieLayout.LooknFeel>) : MovieLooknFeel()
 
     class BindMoreMovieRecyclerView(val movieLooknFeelList: List<MovieLayout.LooknFeel>) : MovieLooknFeel()
+
+    class BindUpdatedMovieItem(val movieItem: MovieLayout.LooknFeel) : MovieLooknFeel()
+
+    class BindRemovedMovieItem(val movieItem: MovieLayout.LooknFeel) : MovieLooknFeel()
 }

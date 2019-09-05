@@ -50,7 +50,7 @@ internal class MovieDataSource @Inject constructor(
         }
     }
 
-    override fun publishMovieDelete(link: String): Observable<Boolean> {
+    override fun publishMovieDelete(link: String): Observable<Movie> {
         return movieDeletePublisher.publish(link)
     }
 

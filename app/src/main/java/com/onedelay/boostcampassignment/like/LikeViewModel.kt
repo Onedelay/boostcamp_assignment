@@ -6,6 +6,8 @@ import com.onedelay.boostcampassignment.data.dto.Movie
 import com.onedelay.boostcampassignment.like.channel.LikeChannelApi
 import com.onedelay.boostcampassignment.like.dto.LikeDataEvent
 import com.onedelay.boostcampassignment.like.dto.LikeLooknFeel
+import com.onedelay.boostcampassignment.like.dto.LikeNavigation
+import com.onedelay.boostcampassignment.like.dto.LikeViewAction
 import com.onedelay.boostcampassignment.like.repository.LikeRepositoryApi
 import com.onedelay.boostcampassignment.movie.custom.MovieLayout
 import io.reactivex.disposables.Disposable
@@ -20,7 +22,7 @@ internal class LikeViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val lifecycleInput by lazy(LazyThreadSafetyMode.NONE, this::LifecycleInput)
-    private val viewActionInput by lazy(LazyThreadSafetyMode.NONE, this::ViewActionInput)
+    val viewActionInput by lazy(LazyThreadSafetyMode.NONE, this::ViewActionInput)
     private val dataInput by lazy(LazyThreadSafetyMode.NONE, this::DataInput)
     private val looknFeelOutput by lazy(LazyThreadSafetyMode.NONE, this::LooknFeelOutput)
     private val navigationOutput by lazy(LazyThreadSafetyMode.NONE, this::NavigationOutput)
@@ -29,17 +31,27 @@ internal class LikeViewModel @Inject constructor(
         val onCreate = channel.ofLifecycle().ofType(ActivityLifeCycleState.OnCreate::class.java)
     }
 
-    inner class ViewActionInput
+    inner class ViewActionInput {
+        val clickMovieItemElement = channel.ofViewAction().ofType(LikeViewAction.Click.ItemElement::class.java)
+
+        val clickMovieRemove = channel.ofViewAction().ofType(LikeViewAction.Click.RemoveMovie::class.java)
+    }
 
     inner class DataInput {
         val likedMovieListFetched = channel.ofData().ofType(LikeDataEvent.LikedMovieListFetched::class.java)
+
+        val likedMovieItemRemoved = channel.ofData().ofType(LikeDataEvent.LikedMovieItemRemoved::class.java)
     }
 
     inner class LooknFeelOutput {
         val bindMovieList = dataInput.likedMovieListFetched
+
+        val removeMovieItem = dataInput.likedMovieItemRemoved
     }
 
-    inner class NavigationOutput
+    inner class NavigationOutput {
+        val navigateToWebViewActivity = viewActionInput.clickMovieItemElement
+    }
 
     init {
         repository.setViewModel(this)
@@ -60,6 +72,11 @@ internal class LikeViewModel @Inject constructor(
                                 movie
                             }
                             channel.accept(LikeLooknFeel.BindMovieRecyclerView(list))
+                        },
+
+                removeMovieItem
+                        .subscribe {
+                            channel.accept(LikeLooknFeel.RemoveMovieRecyclerView(it.likedMovie.toLooknFeel()))
                         }
             )
         }
@@ -68,7 +85,8 @@ internal class LikeViewModel @Inject constructor(
     private fun subscribeNavigation(): Array<Disposable> {
         return navigationOutput.run {
             arrayOf(
-
+                    navigateToWebViewActivity
+                            .subscribe { channel.accept(LikeNavigation.ToWebViewActivity(movieLink = it.movieLink)) }
             )
         }
     }
@@ -85,6 +103,18 @@ internal class LikeViewModel @Inject constructor(
                     userRating = it.userRating
             )
         }
+    }
+
+    private fun Movie.toLooknFeel(): MovieLayout.LooknFeel {
+        return MovieLayout.LooknFeel(
+                title      = title,
+                link       = link,
+                image      = image,
+                pubDate    = pubDate,
+                director   = director,
+                actor      = actor,
+                userRating = userRating
+        )
     }
 
 }
