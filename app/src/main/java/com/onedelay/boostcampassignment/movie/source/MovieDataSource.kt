@@ -1,5 +1,6 @@
 package com.onedelay.boostcampassignment.movie.source
 
+import com.jakewharton.rxrelay2.Relay
 import com.onedelay.boostcampassignment.data.dto.Movie
 import com.onedelay.boostcampassignment.network.*
 import io.reactivex.Observable
@@ -43,7 +44,7 @@ internal class MovieDataSource @Inject constructor(
     }
 
     override fun publishMovieLike(link: String, starred: Boolean): Observable<Movie> {
-        return if(starred) {
+        return if (!starred) {
             movieLikePublisher.publish(link)
         } else {
             movieRemoveLikePublisher.publish(link)
@@ -54,4 +55,11 @@ internal class MovieDataSource @Inject constructor(
         return movieDeletePublisher.publish(link)
     }
 
+    override fun observeLikeMovieChannel(): Relay<Movie> {
+        return movieLikePublisher.ofChannel()
+    }
+
+    override fun observeRemoveLikeMovieChannel(): Relay<Movie> {
+        return movieRemoveLikePublisher.ofChannel()
+    }
 }

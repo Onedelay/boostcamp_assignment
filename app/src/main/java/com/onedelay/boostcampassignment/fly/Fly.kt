@@ -1,6 +1,7 @@
 package com.onedelay.boostcampassignment.fly
 
 import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.Relay
 import com.onedelay.boostcampassignment.data.dto.Movie
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -18,9 +19,9 @@ internal class Fly @Inject constructor() : FlyApi {
 
     override fun fetchLikedMovieList() = likedMovieMap.values.toList()
 
-    private val likeMovieChannel = BehaviorRelay.create<Movie>()
+    private val likeMovieChannel: Relay<Movie> = BehaviorRelay.create()
 
-    private val removeLikeMovieChannel = BehaviorRelay.create<Movie>()
+    private val removeLikeMovieChannel: Relay<Movie> = BehaviorRelay.create()
 
     override fun publishMovieList(movieList: List<Movie>) {
         this.movieList.clear()
@@ -31,46 +32,33 @@ internal class Fly @Inject constructor() : FlyApi {
         this.movieList.addAll(movieList)
     }
 
-    override fun publishToggleMovie(link: String) {
-        this.movieList
-                .filter { it.link == link }
-                .forEach {
-                    it.starred = !it.starred
-
-                    if(!it.starred) {
-                        likedMovieMap[link] = it
-                    } else {
-                        likedMovieMap.remove(link)
-                    }
-                }
-    }
-
     override fun publishAddingLikeMovie(link: String): Observable<Movie> {
-        this.movieList
-                .filter { it.link == link }
-                .forEach {
-                    it.starred = true
+        val index = this.movieList.indexOfFirst { it.link == link }
 
-                    likedMovieMap[link] = it
-                }
-
-        val movie = movieList.first { it.link == link}
+        val movie = this.movieList[index].apply {
+            starred = true
+        }
 
         likeMovieChannel.accept(movie)
 
-        return likeMovieChannel
+        this.likedMovieMap[link] = movie
+
+
+        return Observable.just(movie)
     }
 
     override fun publishRemovingLikeMovie(link: String): Observable<Movie> {
         val index = this.movieList.indexOfFirst { it.link == link }
 
-        this.movieList[index].starred = false
+        val movie = this.movieList[index].apply {
+            starred = false
+        }
+
+        removeLikeMovieChannel.accept(movie)
 
         this.likedMovieMap.remove(link)
 
-        removeLikeMovieChannel.accept(this.movieList[index])
-
-        return removeLikeMovieChannel
+        return Observable.just(this.movieList[index])
     }
 
     override fun publishDeletingMovie(link: String): Movie {
@@ -81,4 +69,7 @@ internal class Fly @Inject constructor() : FlyApi {
         return removedMovie
     }
 
+    override fun channelOfAddedLikeMovie(): Relay<Movie> = likeMovieChannel
+
+    override fun channelOfRemovedLikeMovie(): Relay<Movie> = removeLikeMovieChannel
 }

@@ -78,9 +78,9 @@ internal class MovieActivity : BaseActivity() {
 
                                     is MovieLooknFeel.BindMoreMovieRecyclerView -> bindMoreMovieList(it)
 
-                                    is MovieLooknFeel.BindUpdatedMovieItem -> adapter.updateItem(it.movieItem)
+                                    is MovieLooknFeel.BindUpdatedMovieItem -> updateMovieItem(it)
 
-                                    is MovieLooknFeel.BindRemovedMovieItem -> adapter.removeItem(it.movieItem)
+                                    is MovieLooknFeel.BindRemovedMovieItem -> removeMovieItem(it)
                                 }
                             }
             )
@@ -116,6 +116,14 @@ internal class MovieActivity : BaseActivity() {
 
     private fun bindMoreMovieList(looknFeel: MovieLooknFeel.BindMoreMovieRecyclerView) {
         adapter.addMovieLooknFeelList(looknFeel.movieLooknFeelList)
+    }
+
+    private fun updateMovieItem(looknFeel: MovieLooknFeel.BindUpdatedMovieItem) {
+        adapter.updateItem(looknFeel.movieItem)
+    }
+
+    private fun removeMovieItem(looknFeel: MovieLooknFeel.BindRemovedMovieItem) {
+        adapter.removeItem(looknFeel.movieItem)
     }
 
     private fun initializeRecyclerView() {
@@ -178,12 +186,10 @@ internal class MovieActivity : BaseActivity() {
             ) { _, which ->
                 when(which) {
                     0 -> {
-                        adapter.removeItem(item)
                         viewModel.channel.accept(MovieViewAction.Click.RemoveMovie(item))
                     }
 
                     1 -> {
-                        adapter.updateItem(item)
                         viewModel.channel.accept(MovieViewAction.Click.LikeMovie(item))
                     }
                 }

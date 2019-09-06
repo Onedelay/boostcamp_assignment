@@ -74,7 +74,7 @@ internal class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieVi
     fun updateItem(item: MovieLayout.LooknFeel) {
         val position = movieLooknFeelList.indexOfFirst { it.link == item.link }
 
-        this.movieLooknFeelList[position].starred = !item.starred
+        this.movieLooknFeelList[position].starred = item.starred
 
         notifyItemChanged(position)
     }

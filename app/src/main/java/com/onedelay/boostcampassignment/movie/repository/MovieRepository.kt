@@ -42,6 +42,11 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
                         movieDataSource.publishMovieDelete(link = it.item.link)
                     }
 
+            val observeMovieUpdate = Observable.merge(
+                    movieDataSource.observeLikeMovieChannel(),
+                    movieDataSource.observeRemoveLikeMovieChannel()
+            )
+
             disposable.addAll(
                     fetchMoviesCall
                             .observeOn(AndroidSchedulers.mainThread())
@@ -53,11 +58,14 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
 
                     publishMovieLike
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { channel.accept(MovieDataEvent.MovieItemUpdated(it)) },
+                            .subscribe { },
 
                     publishMovieRemove
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { channel.accept(MovieDataEvent.MovieItemRemoved(it)) }
+                            .subscribe { channel.accept(MovieDataEvent.MovieItemRemoved(it)) },
+
+                    observeMovieUpdate
+                            .subscribe { channel.accept(MovieDataEvent.MovieItemUpdated(it)) }
             )
         }
     }

@@ -102,7 +102,7 @@ internal class MovieViewModel @Inject constructor(
                             .subscribe { channel.accept(MovieLooknFeel.BindUpdatedMovieItem(it.movieItem.toLooknFeel())) },
 
                     bindRemovedMovieItem
-                            .subscribe { channel.accept(MovieLooknFeel.BindUpdatedMovieItem(it.movieItem.toLooknFeel())) }
+                            .subscribe { channel.accept(MovieLooknFeel.BindRemovedMovieItem(it.movieItem.toLooknFeel())) }
             )
         }
     }
@@ -119,20 +119,11 @@ internal class MovieViewModel @Inject constructor(
     }
 
     private fun transform(movieList: List<Movie>): List<MovieLayout.LooknFeel> {
-        return movieList.map {
-            MovieLayout.LooknFeel(
-                    title      = it.title,
-                    link       = it.link,
-                    image      = it.image,
-                    pubDate    = it.pubDate,
-                    director   = it.director,
-                    actor      = it.actor,
-                    userRating = it.userRating
-            )
-        }
+        return movieList.map { it.toLooknFeel() }
     }
 
     private fun Movie.toLooknFeel(): MovieLayout.LooknFeel {
+        val isChecked = starred
         return MovieLayout.LooknFeel(
                 title      = title,
                 link       = link,
@@ -141,7 +132,9 @@ internal class MovieViewModel @Inject constructor(
                 director   = director,
                 actor      = actor,
                 userRating = userRating
-        )
+        ).apply {
+            starred = isChecked
+        }
     }
 
 }
