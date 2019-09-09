@@ -2,11 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.onedelay.boostcampassignment">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".MovieApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".MovieApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -21,15 +24,12 @@
         </activity>
         <activity android:name=".liked.LikedMovieActivity" />
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name=".main.MainActivity"></activity>
+            android:name=".main.MainActivity"
+            android:configChanges="orientation|screenSize" />
         <activity
-            android:label="@string/app_name"
             android:name=".result.WebViewActivity"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

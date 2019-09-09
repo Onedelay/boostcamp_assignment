@@ -10,6 +10,10 @@ import javax.inject.Inject
 
 internal class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieViewHolder>() {
 
+    companion object {
+        const val LIKE_UPDATE = "like_update"
+    }
+
     interface AdapterListener {
         fun onLoadCallback(position: Int)
     }
@@ -33,8 +37,22 @@ internal class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieVi
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.setLooknFeel(movieLooknFeelList[position])
 
-        if(position == itemCount - threshold) {
+        if (position == itemCount - threshold) {
             adapterListener?.onLoadCallback(itemCount + 1)
+        }
+    }
+
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()) {
+            holder.setLooknFeel(movieLooknFeelList[position])
+
+            if (position == itemCount - threshold) {
+                adapterListener?.onLoadCallback(itemCount + 1)
+            }
+        } else {
+            if (payloads.contains(LIKE_UPDATE)) {
+                holder.updateLikeState(movieLooknFeelList[position])
+            }
         }
     }
 
@@ -76,7 +94,31 @@ internal class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieVi
 
         this.movieLooknFeelList[index].starred = item.starred
 
-        notifyItemChanged(index)
+        notifyItemChanged(index, LIKE_UPDATE)
+    }
+
+    fun makeDifferenceList(list: List<MovieLayout.LooknFeel>): List<MovieLayout.LooknFeel> {
+        val previous = this.movieLooknFeelList
+
+        val largerList = mutableListOf<MovieLayout.LooknFeel>()
+        val smallerList = mutableListOf<MovieLayout.LooknFeel>()
+
+        if (previous.size < list.size) {
+            smallerList.addAll(previous)
+            largerList.addAll(list)
+        } else {
+            smallerList.addAll(list)
+            largerList.addAll(previous)
+        }
+
+        val diffList = mutableListOf<MovieLayout.LooknFeel>()
+        for (i in 0 until largerList.size) {
+            if (!smallerList.contains(largerList[i])) {
+                diffList.add(largerList[i].apply { starred = false })
+            }
+        }
+
+        return diffList
     }
 
 }

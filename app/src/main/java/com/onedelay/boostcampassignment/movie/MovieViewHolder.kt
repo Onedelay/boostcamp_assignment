@@ -40,4 +40,8 @@ internal class MovieViewHolder constructor(private val view: View) : RecyclerVie
         view.custom_fl_movie.setLooknFeel(looknFeel)
     }
 
+    fun updateLikeState(looknFeel: MovieLayout.LooknFeel) {
+        view.custom_fl_movie.updateLikedState(looknFeel)
+    }
+
 }

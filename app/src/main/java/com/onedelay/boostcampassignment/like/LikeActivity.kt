@@ -75,8 +75,8 @@ internal class LikeActivity : BaseActivity() {
     }
 
     private fun updateLikedMovieList(looknFeel: LikeLooknFeel.BindLikedMovieList) {
-        looknFeel.likedMovieLooknFeelList.forEach {
-            adapter.updateItem(it)
+        adapter.makeDifferenceList(looknFeel.likedMovieLooknFeelList).forEach {
+            adapter.removeItem(it)
         }
     }
 

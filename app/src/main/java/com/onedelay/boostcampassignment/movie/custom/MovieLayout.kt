@@ -28,6 +28,13 @@ internal class MovieLayout constructor(
             val userRating: String
     ) {
         var starred: Boolean = false
+
+        override fun equals(other: Any?): Boolean {
+            if (other is LooknFeel) {
+                return this.link == other.link
+            }
+            return super.equals(other)
+        }
     }
 
     init {
@@ -53,6 +60,14 @@ internal class MovieLayout constructor(
 
         tv_actor.text = looknFeel.actor
 
+        iv_starred.visibility = if(looknFeel.starred) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+
+    fun updateLikedState(looknFeel: LooknFeel) {
         iv_starred.visibility = if(looknFeel.starred) {
             View.VISIBLE
         } else {

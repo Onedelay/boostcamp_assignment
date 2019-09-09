@@ -11,4 +11,11 @@ internal class Movie(
         val userRating: String
 ) {
     var starred = false
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Movie) {
+            return this.link == other.link
+        }
+        return super.equals(other)
+    }
 }

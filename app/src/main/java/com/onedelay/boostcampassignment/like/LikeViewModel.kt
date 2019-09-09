@@ -63,13 +63,9 @@ internal class LikeViewModel @Inject constructor(
     private fun subscribeLooknFeel(): Array<Disposable> {
         return looknFeelOutput.run {
             arrayOf(
-                bindMovieList
+                    bindMovieList
                         .subscribe {
-                            val list = transform(it.likedMovieList).map { movie ->
-                                movie.starred = true
-                                movie
-                            }
-                            channel.accept(LikeLooknFeel.BindMovieRecyclerView(list))
+                            channel.accept(LikeLooknFeel.BindMovieRecyclerView(transform(it.likedMovieList)))
                         },
 
                     dataInput.movieItemListUpdated
@@ -90,20 +86,11 @@ internal class LikeViewModel @Inject constructor(
     }
 
     private fun transform(movieList: List<Movie>): List<MovieLayout.LooknFeel> {
-        return movieList.map {
-            MovieLayout.LooknFeel(
-                    title      = it.title,
-                    link       = it.link,
-                    image      = it.image,
-                    pubDate    = it.pubDate,
-                    director   = it.director,
-                    actor      = it.actor,
-                    userRating = it.userRating
-            )
-        }
+        return movieList.map {it.toLooknFeel() }
     }
 
     private fun Movie.toLooknFeel(): MovieLayout.LooknFeel {
+        val isChecked = starred
         return MovieLayout.LooknFeel(
                 title      = title,
                 link       = link,
@@ -112,7 +99,9 @@ internal class LikeViewModel @Inject constructor(
                 director   = director,
                 actor      = actor,
                 userRating = userRating
-        )
+        ).apply {
+            starred = isChecked
+        }
     }
 
 }

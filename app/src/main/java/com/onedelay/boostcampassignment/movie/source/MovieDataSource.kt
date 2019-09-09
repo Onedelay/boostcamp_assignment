@@ -48,6 +48,7 @@ internal class MovieDataSource @Inject constructor(
     }
 
     override fun publishMovieDelete(link: String): Movie {
+        fly.publishRemovingLikeMovie(link)
         return fly.publishRemovingMovie(link)
     }
 
