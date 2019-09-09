@@ -1,19 +1,15 @@
 package com.onedelay.boostcampassignment.movie.source
 
-import com.jakewharton.rxrelay2.Relay
 import com.onedelay.boostcampassignment.data.dto.Movie
-import com.onedelay.boostcampassignment.network.*
+import com.onedelay.boostcampassignment.fly.FlyApi
+import com.onedelay.boostcampassignment.network.MovieListFetcher
 import io.reactivex.Observable
 import javax.inject.Inject
 
 
 internal class MovieDataSource @Inject constructor(
         private val movieListFetcher: MovieListFetcher,
-        private val movieListPublisher: MovieListPublisher,
-        private val movieListAddPublisher: MovieListAddPublisher,
-        private val movieLikePublisher: MovieLikePublisher,
-        private val movieRemoveLikePublisher: MovieRemoveLikePublisher,
-        private val movieDeletePublisher: MovieDeletePublisher
+        private val fly: FlyApi
 
 ) : MovieDataSourceApi {
 
@@ -22,44 +18,40 @@ internal class MovieDataSource @Inject constructor(
                 .map {
                     it.items.map { movie ->
                         Movie(
-                           title      = movie.title,
-                           link       = movie.link,
-                           image      = movie.image,
-                           pubDate    = movie.pubDate,
-                           director   = movie.director,
-                           actor      = movie.actor,
-                           userRating = movie.userRating
+                                title      = movie.title,
+                                link       = movie.link,
+                                image      = movie.image,
+                                pubDate    = movie.pubDate,
+                                director   = movie.director,
+                                actor      = movie.actor,
+                                userRating = movie.userRating
                         )
                     }
                 }
                 .map {
                     if(start == 1) {
-                        movieListPublisher.publish(it)
+                        fly.publishMovieList(it)
                     } else {
-                        movieListAddPublisher.publish(it)
+                        fly.publishAddingMovieList(it)
                     }
 
                     it
                 }
     }
 
-    override fun publishMovieLike(link: String, starred: Boolean): Observable<Movie> {
+    override fun publishMovieLike(link: String, starred: Boolean): Movie {
         return if (!starred) {
-            movieLikePublisher.publish(link)
+            fly.publishAddingLikeMovie(link)
         } else {
-            movieRemoveLikePublisher.publish(link)
+            fly.publishRemovingLikeMovie(link)
         }
     }
 
-    override fun publishMovieDelete(link: String): Observable<Movie> {
-        return movieDeletePublisher.publish(link)
+    override fun publishMovieDelete(link: String): Movie {
+        return fly.publishRemovingMovie(link)
     }
 
-    override fun observeLikeMovieChannel(): Relay<Movie> {
-        return movieLikePublisher.ofChannel()
-    }
-
-    override fun observeRemoveLikeMovieChannel(): Relay<Movie> {
-        return movieRemoveLikePublisher.ofChannel()
+    override fun ofUpdateLikedMovieChannel(): Observable<List<Movie>> {
+        return fly.getLikedMovieUpdateChannel()
     }
 }

@@ -11,4 +11,6 @@ internal sealed class MovieLooknFeel {
     class BindUpdatedMovieItem(val movieItem: MovieLayout.LooknFeel) : MovieLooknFeel()
 
     class BindRemovedMovieItem(val movieItem: MovieLayout.LooknFeel) : MovieLooknFeel()
+
+    class BindLikedMovieList(val likedMovieLooknFeelList: List<MovieLayout.LooknFeel>) : MovieLooknFeel()
 }

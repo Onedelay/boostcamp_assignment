@@ -1,5 +1,6 @@
 package com.onedelay.boostcampassignment.movie.repository
 
+import com.onedelay.boostcampassignment.data.dto.Movie
 import com.onedelay.boostcampassignment.extension.pairWithLatestFrom
 import com.onedelay.boostcampassignment.movie.MovieViewModel
 import com.onedelay.boostcampassignment.movie.dto.MovieDataEvent
@@ -10,7 +11,10 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-internal class MovieRepository @Inject constructor(private val movieDataSource: MovieDataSourceApi) : MovieRepositoryApi {
+internal class MovieRepository @Inject constructor(
+        private val movieDataSource: MovieDataSourceApi
+
+) : MovieRepositoryApi {
 
     override fun setViewModel(viewModel: MovieViewModel) {
         with(viewModel) {
@@ -23,6 +27,29 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
                     .observeOn(Schedulers.io())
                     .switchMap { movieDataSource.fetchMovies(movieName = it, start = 1) }
 
+            val fetchLikedMovieUpdate = movieDataSource.ofUpdateLikedMovieChannel()
+                    .scan { previous, current ->
+                        val largerList = mutableListOf<Movie>()
+                        val smallerList = mutableListOf<Movie>()
+
+                        if (previous.size < current.size) {
+                            smallerList.addAll(previous)
+                            largerList.addAll(current)
+                        } else {
+                            smallerList.addAll(current)
+                            largerList.addAll(previous)
+                        }
+
+                        val diffList = mutableListOf<Movie>()
+                        for (i in 0 until largerList.size) {
+                            if (!smallerList.contains(largerList[i])) {
+                                diffList.add(largerList[i])
+                            }
+                        }
+
+                        diffList
+                    }
+
             val fetchMoreMovies = viewActionInput.loadMoreMovieList
                     .pairWithLatestFrom(fetchMovies)
                     .observeOn(Schedulers.io())
@@ -32,20 +59,15 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
 
             val publishMovieLike = viewActionInput.clickMovieLike
                     .observeOn(Schedulers.io())
-                    .switchMap {
+                    .map {
                         movieDataSource.publishMovieLike(link = it.item.link, starred = it.item.starred)
                     }
 
             val publishMovieRemove = viewActionInput.clickMovieRemove
                     .observeOn(Schedulers.io())
-                    .switchMap {
+                    .map {
                         movieDataSource.publishMovieDelete(link = it.item.link)
                     }
-
-            val observeMovieUpdate = Observable.merge(
-                    movieDataSource.observeLikeMovieChannel(),
-                    movieDataSource.observeRemoveLikeMovieChannel()
-            )
 
             disposable.addAll(
                     fetchMoviesCall
@@ -56,16 +78,16 @@ internal class MovieRepository @Inject constructor(private val movieDataSource: 
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe { channel.accept(MovieDataEvent.MoreMovieListFetched(it)) },
 
+                    fetchLikedMovieUpdate
+                            .subscribe { channel.accept(MovieDataEvent.LikedMovieItemList(it)) },
+
                     publishMovieLike
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe { },
 
                     publishMovieRemove
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { channel.accept(MovieDataEvent.MovieItemRemoved(it)) },
-
-                    observeMovieUpdate
-                            .subscribe { channel.accept(MovieDataEvent.MovieItemUpdated(it)) }
+                            .subscribe { channel.accept(MovieDataEvent.MovieItemRemoved(it)) }
             )
         }
     }

@@ -81,6 +81,8 @@ internal class MovieActivity : BaseActivity() {
                                     is MovieLooknFeel.BindUpdatedMovieItem -> updateMovieItem(it)
 
                                     is MovieLooknFeel.BindRemovedMovieItem -> removeMovieItem(it)
+
+                                    is MovieLooknFeel.BindLikedMovieList -> updateLikedMovieList(it)
                                 }
                             }
             )
@@ -124,6 +126,12 @@ internal class MovieActivity : BaseActivity() {
 
     private fun removeMovieItem(looknFeel: MovieLooknFeel.BindRemovedMovieItem) {
         adapter.removeItem(looknFeel.movieItem)
+    }
+
+    private fun updateLikedMovieList(looknFeel: MovieLooknFeel.BindLikedMovieList) {
+        looknFeel.likedMovieLooknFeelList.forEach {
+            adapter.updateItem(it)
+        }
     }
 
     private fun initializeRecyclerView() {

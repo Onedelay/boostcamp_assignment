@@ -12,7 +12,7 @@ internal class MovieDeletePublisher @Inject constructor(
 ) {
 
     fun publish(link: String): Observable<Movie> {
-        return Observable.just(fly.publishDeletingMovie(link))
+        return Observable.just(fly.publishRemovingMovie(link))
     }
 
 }

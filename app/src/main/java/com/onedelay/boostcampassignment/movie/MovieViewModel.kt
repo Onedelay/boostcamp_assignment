@@ -60,6 +60,8 @@ internal class MovieViewModel @Inject constructor(
         val movieItemUpdated = channel.ofData().ofType(MovieDataEvent.MovieItemUpdated::class.java)
 
         val movieItemRemoved = channel.ofData().ofType(MovieDataEvent.MovieItemRemoved::class.java)
+
+        val movieItemListUpdated = channel.ofData().ofType(MovieDataEvent.LikedMovieItemList::class.java)
     }
 
     inner class LooknFeelOutput {
@@ -102,7 +104,11 @@ internal class MovieViewModel @Inject constructor(
                             .subscribe { channel.accept(MovieLooknFeel.BindUpdatedMovieItem(it.movieItem.toLooknFeel())) },
 
                     bindRemovedMovieItem
-                            .subscribe { channel.accept(MovieLooknFeel.BindRemovedMovieItem(it.movieItem.toLooknFeel())) }
+                            .subscribe { channel.accept(MovieLooknFeel.BindRemovedMovieItem(it.movieItem.toLooknFeel())) },
+
+                    dataInput.movieItemListUpdated
+                            .subscribe { channel.accept(MovieLooknFeel.BindLikedMovieList(transform(it.likedMovieList))) }
+
             )
         }
     }
