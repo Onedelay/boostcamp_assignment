@@ -7,6 +7,7 @@ import com.onedelay.boostcampassignment.movie.dto.MovieDataEvent
 import com.onedelay.boostcampassignment.movie.source.MovieDataSourceApi
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -27,28 +28,36 @@ internal class MovieRepository @Inject constructor(
                     .observeOn(Schedulers.io())
                     .switchMap { movieDataSource.fetchMovies(movieName = it, start = 1) }
 
-            val fetchLikedMovieUpdate = movieDataSource.ofUpdateLikedMovieChannel()
-                    .scan { previous, current ->
-                        val largerList = mutableListOf<Movie>()
-                        val smallerList = mutableListOf<Movie>()
+            val updateMovieLike = movieDataSource.ofUpdateLikedMovieChannel()
 
-                        if (previous.size < current.size) {
-                            smallerList.addAll(previous)
-                            largerList.addAll(current)
-                        } else {
-                            smallerList.addAll(current)
-                            largerList.addAll(previous)
-                        }
+            val fetchLikedMovieUpdate = Observable.merge(
+                    updateMovieLike.take(1),
+                    Observables.zip(updateMovieLike, updateMovieLike.skip(1))
+                            .map {
+                                val previous = it.first
+                                val current  = it.second
 
-                        val diffList = mutableListOf<Movie>()
-                        for (i in 0 until largerList.size) {
-                            if (!smallerList.contains(largerList[i])) {
-                                diffList.add(largerList[i])
+                                val largerList = mutableListOf<Movie>()
+                                val smallerList = mutableListOf<Movie>()
+
+                                if (previous.size < current.size) {
+                                    smallerList.addAll(previous)
+                                    largerList.addAll(current)
+                                } else {
+                                    smallerList.addAll(current)
+                                    largerList.addAll(previous)
+                                }
+
+                                val diffList = mutableListOf<Movie>()
+                                for (i in 0 until largerList.size) {
+                                    if (!smallerList.contains(largerList[i])) {
+                                        diffList.add(largerList[i])
+                                    }
+                                }
+
+                                diffList
                             }
-                        }
-
-                        diffList
-                    }
+            )
 
             val fetchMoreMovies = viewActionInput.loadMoreMovieList
                     .pairWithLatestFrom(fetchMovies)

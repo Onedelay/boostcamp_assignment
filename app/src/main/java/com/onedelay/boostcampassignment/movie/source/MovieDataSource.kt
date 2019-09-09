@@ -29,7 +29,7 @@ internal class MovieDataSource @Inject constructor(
                     }
                 }
                 .map {
-                    if(start == 1) {
+                    if (start == 1) {
                         fly.publishMovieList(it)
                     } else {
                         fly.publishAddingMovieList(it)

@@ -6,5 +6,5 @@ import com.onedelay.boostcampassignment.movie.custom.MovieLayout
 internal sealed class LikeLooknFeel {
     class BindMovieRecyclerView(val movieLooknFeelList: List<MovieLayout.LooknFeel>) : LikeLooknFeel()
 
-    class RemoveMovieRecyclerView(val movieItem: MovieLayout.LooknFeel) : LikeLooknFeel()
+    class BindLikedMovieList(val likedMovieLooknFeelList: List<MovieLayout.LooknFeel>) : LikeLooknFeel()
 }

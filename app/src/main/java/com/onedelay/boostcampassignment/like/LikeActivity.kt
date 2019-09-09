@@ -49,8 +49,8 @@ internal class LikeActivity : BaseActivity() {
                                 adapter.setMovieLooknFeelList(list = it.movieLooknFeelList)
                             }
 
-                            is LikeLooknFeel.RemoveMovieRecyclerView -> {
-                                adapter.removeItem(item = it.movieItem)
+                            is LikeLooknFeel.BindLikedMovieList -> {
+                                updateLikedMovieList(it)
                             }
                         }
                     }
@@ -72,6 +72,12 @@ internal class LikeActivity : BaseActivity() {
                             }
                         }
         )
+    }
+
+    private fun updateLikedMovieList(looknFeel: LikeLooknFeel.BindLikedMovieList) {
+        looknFeel.likedMovieLooknFeelList.forEach {
+            adapter.updateItem(it)
+        }
     }
 
     private fun initializeRecyclerView() {

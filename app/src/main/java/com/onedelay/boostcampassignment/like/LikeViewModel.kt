@@ -40,13 +40,11 @@ internal class LikeViewModel @Inject constructor(
     inner class DataInput {
         val likedMovieListFetched = channel.ofData().ofType(LikeDataEvent.LikedMovieListFetched::class.java)
 
-        val likedMovieItemRemoved = channel.ofData().ofType(LikeDataEvent.LikedMovieItemRemoved::class.java)
+        val movieItemListUpdated = channel.ofData().ofType(LikeDataEvent.LikedMovieItemList::class.java)
     }
 
     inner class LooknFeelOutput {
         val bindMovieList = dataInput.likedMovieListFetched
-
-        val removeMovieItem = dataInput.likedMovieItemRemoved
     }
 
     inner class NavigationOutput {
@@ -74,10 +72,10 @@ internal class LikeViewModel @Inject constructor(
                             channel.accept(LikeLooknFeel.BindMovieRecyclerView(list))
                         },
 
-                removeMovieItem
-                        .subscribe {
-                            channel.accept(LikeLooknFeel.RemoveMovieRecyclerView(it.likedMovie.toLooknFeel()))
-                        }
+                    dataInput.movieItemListUpdated
+                            .subscribe {
+                                channel.accept(LikeLooknFeel.BindLikedMovieList(transform(it.likedMovieList)))
+                            }
             )
         }
     }

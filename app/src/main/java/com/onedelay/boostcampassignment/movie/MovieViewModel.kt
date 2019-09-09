@@ -57,8 +57,6 @@ internal class MovieViewModel @Inject constructor(
 
         val moreMovieListFetched = channel.ofData().ofType(MovieDataEvent.MoreMovieListFetched::class.java)
 
-        val movieItemUpdated = channel.ofData().ofType(MovieDataEvent.MovieItemUpdated::class.java)
-
         val movieItemRemoved = channel.ofData().ofType(MovieDataEvent.MovieItemRemoved::class.java)
 
         val movieItemListUpdated = channel.ofData().ofType(MovieDataEvent.LikedMovieItemList::class.java)
@@ -69,9 +67,9 @@ internal class MovieViewModel @Inject constructor(
 
         val bindMoreMovieList = dataInput.moreMovieListFetched
 
-        val bindUpdatedMovieItem = dataInput.movieItemUpdated
-
         val bindRemovedMovieItem = dataInput.movieItemRemoved
+
+        val bindUpdateMovieItemList = dataInput.movieItemListUpdated
     }
 
     inner class NavigationOutput {
@@ -100,13 +98,10 @@ internal class MovieViewModel @Inject constructor(
                             .doOnError { Log.d("MY_LOG", "${it.printStackTrace()}") }
                             .subscribe { channel.accept(MovieLooknFeel.BindMoreMovieRecyclerView(transform(it.movieList))) },
 
-                    bindUpdatedMovieItem
-                            .subscribe { channel.accept(MovieLooknFeel.BindUpdatedMovieItem(it.movieItem.toLooknFeel())) },
-
                     bindRemovedMovieItem
                             .subscribe { channel.accept(MovieLooknFeel.BindRemovedMovieItem(it.movieItem.toLooknFeel())) },
 
-                    dataInput.movieItemListUpdated
+                    bindUpdateMovieItemList
                             .subscribe { channel.accept(MovieLooknFeel.BindLikedMovieList(transform(it.likedMovieList))) }
 
             )

@@ -8,8 +8,6 @@ internal sealed class MovieDataEvent {
 
     class MoreMovieListFetched(val movieList: List<Movie>) : MovieDataEvent()
 
-    class MovieItemUpdated(val movieItem: Movie) : MovieDataEvent()
-
     class MovieItemRemoved(val movieItem: Movie) : MovieDataEvent()
 
     class LikedMovieItemList(val likedMovieList: List<Movie>) : MovieDataEvent()

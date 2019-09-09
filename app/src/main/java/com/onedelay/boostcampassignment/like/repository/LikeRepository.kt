@@ -13,14 +13,9 @@ internal class LikeRepository @Inject constructor(
 
     override fun setViewModel(viewModel: LikeViewModel) {
         with(viewModel) {
-//            val fetchLikedMovies = lifecycleInput.onCreate
-//                    .switchMap {
-//                        dataSource.fetchLikedMovies()
-//                    }
-
             val fetchLikedMovies = lifecycleInput.onCreate
-                    .map {
-                        dataSource.fetchLikedMovieList()
+                    .switchMap {
+                        dataSource.ofUpdateLikedMovieChannel()
                     }
 
             val removeLikedMovies = viewActionInput.clickMovieRemove
@@ -33,7 +28,7 @@ internal class LikeRepository @Inject constructor(
                             .subscribe { channel.accept(LikeDataEvent.LikedMovieListFetched(it)) },
 
                     removeLikedMovies
-                            .subscribe { channel.accept(LikeDataEvent.LikedMovieItemRemoved(it)) }
+                            .subscribe { }
             )
         }
     }
