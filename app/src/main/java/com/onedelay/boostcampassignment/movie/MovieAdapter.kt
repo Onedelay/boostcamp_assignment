@@ -44,11 +44,7 @@ internal class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieVi
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads.isEmpty()) {
-            holder.setLooknFeel(movieLooknFeelList[position])
-
-            if (position == itemCount - threshold) {
-                adapterListener?.onLoadCallback(itemCount + 1)
-            }
+            onBindViewHolder(holder, position)
         } else {
             if (payloads.contains(LIKE_UPDATE)) {
                 holder.updateLikeState(movieLooknFeelList[position])

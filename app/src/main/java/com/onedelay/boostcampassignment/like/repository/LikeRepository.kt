@@ -3,6 +3,8 @@ package com.onedelay.boostcampassignment.like.repository
 import com.onedelay.boostcampassignment.like.LikeViewModel
 import com.onedelay.boostcampassignment.like.dto.LikeDataEvent
 import com.onedelay.boostcampassignment.like.source.LikeDataSourceApi
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject
 
 
@@ -13,9 +15,16 @@ internal class LikeRepository @Inject constructor(
 
     override fun setViewModel(viewModel: LikeViewModel) {
         with(viewModel) {
-            val fetchLikedMovies = lifecycleInput.onCreate
-
-            val fetchLikedMovieUpdate = dataSource.ofUpdateLikedMovieChannel()
+            val fetchLikedMovies = Observable.merge(
+                    lifecycleInput.onCreate
+                            .map { LikeDataEvent.LikedMovieListFetched(dataSource.getLikedMovieList()) },
+                    Observables.combineLatest(
+                            lifecycleInput.onCreate,
+                            dataSource.fetchLikedMovieList()
+                    )
+                            .map { LikeDataEvent.LikedMovieItemList(it.second) }
+                            .skip(1)
+            )
 
             val removeLikedMovies = viewActionInput.clickMovieRemove
                     .map {
@@ -24,10 +33,7 @@ internal class LikeRepository @Inject constructor(
 
             disposable.addAll(
                     fetchLikedMovies
-                            .subscribe { channel.accept(LikeDataEvent.LikedMovieListFetched(dataSource.fetchLikedMovieList())) },
-
-                    fetchLikedMovieUpdate
-                            .subscribe { channel.accept(LikeDataEvent.LikedMovieItemList(it)) },
+                            .subscribe { channel.accept(it) },
 
                     removeLikedMovies
                             .subscribe { }

@@ -11,16 +11,16 @@ internal class LikeDataSource @Inject constructor(
 
 ) : LikeDataSourceApi {
 
-    override fun fetchLikedMovieList(): List<Movie> {
+    override fun getLikedMovieList(): List<Movie> {
         return fly.fetchLikedMovies()
+    }
+
+    override fun fetchLikedMovieList(): Observable<List<Movie>> {
+        return fly.getLikedMovieUpdateChannel()
     }
 
     override fun removeLikedMovie(link: String): Movie {
         return fly.publishRemovingLikeMovie(link)
-    }
-
-    override fun ofUpdateLikedMovieChannel(): Observable<List<Movie>> {
-        return fly.getLikedMovieUpdateChannel()
     }
 
 }

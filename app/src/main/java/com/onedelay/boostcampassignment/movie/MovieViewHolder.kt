@@ -18,7 +18,6 @@ internal class MovieViewHolder constructor(private val view: View) : RecyclerVie
     private lateinit var item: MovieLayout.LooknFeel
 
     init {
-
         view.apply {
             setOnClickListener { listener?.onClick(item) }
 
@@ -28,7 +27,6 @@ internal class MovieViewHolder constructor(private val view: View) : RecyclerVie
                 true
             }
         }
-
     }
 
     fun setItemClickListener(listener: ItemClickListener?) {
