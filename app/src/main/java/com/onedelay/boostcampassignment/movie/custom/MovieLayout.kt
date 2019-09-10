@@ -2,6 +2,7 @@ package com.onedelay.boostcampassignment.movie.custom
 
 import android.content.Context
 import android.os.Build
+import android.os.Parcelable
 import android.text.Html
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.bumptech.glide.Glide
 import com.onedelay.boostcampassignment.R
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.view_movie_item.view.*
 
 
@@ -18,6 +20,7 @@ internal class MovieLayout constructor(
 
 ) : FrameLayout(context, attrs) {
 
+    @Parcelize
     class LooknFeel(
             val title: String,
             val link: String,
@@ -25,15 +28,18 @@ internal class MovieLayout constructor(
             val pubDate: String,
             val director: String,
             val actor: String,
-            val userRating: String
-    ) {
-        var starred: Boolean = false
-
+            val userRating: String,
+            var starred: Boolean = false
+    ) : Parcelable {
         override fun equals(other: Any?): Boolean {
             if (other is LooknFeel) {
                 return this.link == other.link
             }
             return super.equals(other)
+        }
+
+        override fun hashCode(): Int {
+            return link.hashCode()
         }
     }
 

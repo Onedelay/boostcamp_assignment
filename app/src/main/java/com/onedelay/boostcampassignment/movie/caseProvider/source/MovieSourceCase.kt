@@ -1,7 +1,6 @@
 package com.onedelay.boostcampassignment.movie.caseProvider.source
 
 import com.onedelay.boostcampassignment.data.dto.Movie
-import com.onedelay.boostcampassignment.extension.pairWithLatestFrom
 import com.onedelay.boostcampassignment.movie.caseProvider.MovieCaseProviderApi
 import com.onedelay.boostcampassignment.movie.dto.MovieDataEvent
 import com.onedelay.boostcampassignment.movie.source.MovieDataSourceApi
@@ -65,10 +64,9 @@ internal class MovieSourceCase @Inject constructor(
         )
 
         val fetchMoreMovies = caseProvider.viewAction().loadMoreMovieList
-                .pairWithLatestFrom(fetchMovies)
                 .observeOn(Schedulers.io())
                 .switchMap {
-                    dataSource.fetchMovies(movieName = it.second, start = it.first.start)
+                    dataSource.fetchMovies(movieName = it.movieName, start = it.start)
                 }
     }
 

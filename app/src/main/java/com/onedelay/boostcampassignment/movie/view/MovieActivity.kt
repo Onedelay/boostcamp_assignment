@@ -34,7 +34,7 @@ internal class MovieActivity : DaggerAppCompatActivity(), MovieView {
 
         initializeListener()
 
-        presentCase.onLifecycle(ActivityLifeCycleState.OnCreate())
+        presentCase.onLifecycle(ActivityLifeCycleState.OnCreate(savedInstanceState = savedInstanceState))
     }
 
     override fun onDestroy() {
@@ -89,7 +89,7 @@ internal class MovieActivity : DaggerAppCompatActivity(), MovieView {
     }
 
     private fun bindMovieList(looknFeel: MovieLooknFeel.BindMovieRecyclerView) {
-        custom_fl_entire_movie.setLooknFeel(EntireMovieLayout.LooknFeel(looknFeel.movieLooknFeelList))
+        custom_fl_entire_movie.setLooknFeel(EntireMovieLayout.LooknFeel(looknFeel.movieLooknFeelList.toMutableList()))
     }
 
     private fun bindMoreMovieList(looknFeel: MovieLooknFeel.BindMoreMovieRecyclerView) {
@@ -118,8 +118,8 @@ internal class MovieActivity : DaggerAppCompatActivity(), MovieView {
                 showDialog(looknFeel)
             }
 
-            override fun onLoadMoreRequested(start: Int) {
-                presentCase.onViewAction(MovieViewAction.LoadMore(start = start))
+            override fun onLoadMoreRequested(movieName: String, start: Int) {
+                presentCase.onViewAction(MovieViewAction.LoadMore(movieName = movieName, start = start))
             }
         })
     }

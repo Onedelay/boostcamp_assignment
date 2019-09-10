@@ -37,7 +37,7 @@ internal class LikeActivity : BaseActivity() {
 
         initializeListener()
 
-        viewModel.channel.accept(ActivityLifeCycleState.OnCreate())
+        viewModel.channel.accept(ActivityLifeCycleState.OnCreate(savedInstanceState = savedInstanceState))
     }
 
     private fun subscribeLooknFeel() {

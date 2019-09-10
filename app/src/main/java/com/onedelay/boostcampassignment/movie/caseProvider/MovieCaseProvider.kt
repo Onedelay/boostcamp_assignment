@@ -22,7 +22,7 @@ internal class MovieCaseProvider @Inject constructor(
     private val dataInput by lazy(LazyThreadSafetyMode.NONE) { DataInput() }
 
     inner class LifecycleInput {
-        private val onCreate = channel.ofLifecycle().ofType(ActivityLifeCycleState.OnCreate::class.java)
+        val onCreate = channel.ofLifecycle().ofType(ActivityLifeCycleState.OnCreate::class.java)
 
         val onDestory = channel.ofLifecycle().ofType(ActivityLifeCycleState.OnDestroy::class.java)
     }

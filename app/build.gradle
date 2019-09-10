@@ -16,6 +16,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    androidExtensions {
+        experimental = true
+    }
+
     signingConfigs {
         ide {
             storeFile file('../keystores/movie.keystore')

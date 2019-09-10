@@ -18,5 +18,5 @@ internal sealed class MovieViewAction {
         class RemoveMovie(val item: MovieLayout.LooknFeel) : Click()
     }
 
-    class LoadMore(val start: Int) : MovieViewAction()
+    class LoadMore(val movieName: String, val start: Int) : MovieViewAction()
 }

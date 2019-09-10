@@ -1,6 +1,7 @@
 package com.onedelay.boostcampassignment.movie
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.onedelay.boostcampassignment.R
@@ -38,6 +39,7 @@ internal class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieVi
         holder.setLooknFeel(movieLooknFeelList[position])
 
         if (position == itemCount - threshold) {
+            Log.d("MY_LOG", "onLoadCallback")
             adapterListener?.onLoadCallback(itemCount + 1)
         }
     }
