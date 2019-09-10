@@ -29,7 +29,8 @@ internal class MovieLayout constructor(
             val director: String,
             val actor: String,
             val userRating: String,
-            var starred: Boolean = false
+            var starred: Boolean = false,
+            var isBigImageShowing: Boolean = false
     ) : Parcelable {
         override fun equals(other: Any?): Boolean {
             if (other is LooknFeel) {
@@ -77,6 +78,12 @@ internal class MovieLayout constructor(
         } else {
             View.GONE
         }
+
+        if(looknFeel.isBigImageShowing) {
+            showBigImage(looknFeel.image)
+        } else {
+            hideBigImage()
+        }
     }
 
     fun updateLikedState(looknFeel: LooknFeel) {
@@ -89,16 +96,28 @@ internal class MovieLayout constructor(
 
     private fun initializeListener() {
         iv_thumb.setOnClickListener {
-            iv_movie_big.visibility = View.VISIBLE
-
-            Glide.with(iv_movie_big.context)
-                    .load(looknFeel!!.image)
-                    .into(iv_movie_big)
+            showBigImage(looknFeel!!.image)
         }
 
         iv_movie_big.setOnClickListener {
-            iv_movie_big.visibility = View.GONE
+            hideBigImage()
         }
+    }
+
+    private fun showBigImage(image: String) {
+        iv_movie_big.visibility = View.VISIBLE
+
+        Glide.with(iv_movie_big.context)
+                .load(image)
+                .into(iv_movie_big)
+
+        looknFeel!!.isBigImageShowing = true
+    }
+
+    private fun hideBigImage() {
+        iv_movie_big.visibility = View.GONE
+
+        looknFeel!!.isBigImageShowing = false
     }
 
 }
