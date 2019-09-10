@@ -7,7 +7,7 @@ import com.onedelay.boostcampassignment.liked.LikedMovieActivity
 import com.onedelay.boostcampassignment.liked.LikedMovieModule
 import com.onedelay.boostcampassignment.main.MainActivity
 import com.onedelay.boostcampassignment.main.MainModule
-import com.onedelay.boostcampassignment.movie.MovieActivity
+import com.onedelay.boostcampassignment.movie.view.MovieActivity
 import com.onedelay.boostcampassignment.movie.MovieModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

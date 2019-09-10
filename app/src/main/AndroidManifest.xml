@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".like.LikeActivity" />
-        <activity android:name=".movie.MovieActivity">
+        <activity android:name=".movie.view.MovieActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

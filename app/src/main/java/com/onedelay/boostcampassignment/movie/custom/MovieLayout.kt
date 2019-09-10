@@ -37,11 +37,17 @@ internal class MovieLayout constructor(
         }
     }
 
+    private var looknFeel: LooknFeel? = null
+
     init {
         LayoutInflater.from(context).inflate(R.layout.view_movie_item, this, true)
+
+        initializeListener()
     }
 
     fun setLooknFeel(looknFeel: LooknFeel) {
+        this.looknFeel = looknFeel
+
         Glide.with(iv_thumb.context)
                 .load(looknFeel.image)
                 .into(iv_thumb)
@@ -72,6 +78,20 @@ internal class MovieLayout constructor(
             View.VISIBLE
         } else {
             View.GONE
+        }
+    }
+
+    private fun initializeListener() {
+        iv_thumb.setOnClickListener {
+            iv_movie_big.visibility = View.VISIBLE
+
+            Glide.with(iv_movie_big.context)
+                    .load(looknFeel!!.image)
+                    .into(iv_movie_big)
+        }
+
+        iv_movie_big.setOnClickListener {
+            iv_movie_big.visibility = View.GONE
         }
     }
 
