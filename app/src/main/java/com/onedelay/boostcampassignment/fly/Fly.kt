@@ -1,6 +1,6 @@
 package com.onedelay.boostcampassignment.fly
 
-import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.onedelay.boostcampassignment.data.dto.Movie
 import io.reactivex.Observable
@@ -15,7 +15,7 @@ internal class Fly @Inject constructor() : FlyApi {
 
     private val likedMovieMap = LinkedHashMap<MovieKey, Movie>()
 
-    private val likedMovieUpdateChannel: Relay<List<Movie>> = BehaviorRelay.create()
+    private val likedMovieUpdateChannel: Relay<List<Movie>> = PublishRelay.create()
 
     override fun fetchMovieList() = movieList
 
