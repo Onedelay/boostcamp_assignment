@@ -7,7 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.onedelay.boostcampassignment.ActivityLifeCycleState
 import com.onedelay.boostcampassignment.R
-import com.onedelay.boostcampassignment.like.LikeActivity
+import com.onedelay.boostcampassignment.like.view.LikeActivity
 import com.onedelay.boostcampassignment.movie.caseProvider.present.MoviePresentCaseApi
 import com.onedelay.boostcampassignment.movie.caseProvider.source.MovieSourceCaseApi
 import com.onedelay.boostcampassignment.movie.custom.MovieLayout

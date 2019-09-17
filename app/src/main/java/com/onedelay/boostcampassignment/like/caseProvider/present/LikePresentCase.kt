@@ -1,42 +1,36 @@
-package com.onedelay.boostcampassignment.movie.caseProvider.present
+package com.onedelay.boostcampassignment.like.caseProvider.present
 
 import com.onedelay.boostcampassignment.ActivityLifeCycleState
 import com.onedelay.boostcampassignment.data.dto.Movie
-import com.onedelay.boostcampassignment.movie.caseProvider.MovieCaseProvider
+import com.onedelay.boostcampassignment.like.caseProvider.LikeCaseProviderApi
+import com.onedelay.boostcampassignment.like.dto.LikeLooknFeel
+import com.onedelay.boostcampassignment.like.dto.LikeNavigation
+import com.onedelay.boostcampassignment.like.dto.LikeViewAction
+import com.onedelay.boostcampassignment.like.view.LikeView
 import com.onedelay.boostcampassignment.movie.custom.MovieLayout
-import com.onedelay.boostcampassignment.movie.dto.MovieLooknFeel
-import com.onedelay.boostcampassignment.movie.dto.MovieNavigation
-import com.onedelay.boostcampassignment.movie.dto.MovieViewAction
-import com.onedelay.boostcampassignment.movie.view.MovieView
 import io.reactivex.disposables.Disposable
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
 @Suppress("HasPlatformType")
-internal class MoviePresenterCase @Inject constructor(
-        private val weakView: WeakReference<MovieView>,
-        private val caseProvider: MovieCaseProvider
+internal class LikePresentCase @Inject constructor(
+        private val weakView: WeakReference<LikeView>,
+        private val caseProvider: LikeCaseProviderApi
 
-) : MoviePresentCaseApi {
+) : LikePresentCaseApi {
 
     private val looknFeelOutput by lazy(LazyThreadSafetyMode.NONE) { LooknFeelOutput() }
 
     private val navigationOutput by lazy(LazyThreadSafetyMode.NONE) { NavigationOutput() }
 
     inner class LooknFeelOutput {
-        val bindMovieList = caseProvider.data().movieListFetched
+        val bindLikedMovieList = caseProvider.data().likeMovieListFetched
 
-        val bindMoreMovieList = caseProvider.data().moreMovieListFetched
-
-        val bindRemovedMovieItem = caseProvider.data().movieItemRemoved
-
-        val bindUpdateMovieItemList = caseProvider.data().movieItemListUpdated
+        val bindUpdateMovieItemList = caseProvider.data().likeMovieListUpdated
     }
 
     inner class NavigationOutput {
-        val navigateToLikeActivity = caseProvider.viewAction().clickOptionMenuLike
-
         val navigateToWebViewActivity = caseProvider.viewAction().clickMovieItemElement
     }
 
@@ -50,17 +44,10 @@ internal class MoviePresenterCase @Inject constructor(
     private fun subscribeLooknFeel(): Array<Disposable> {
         return looknFeelOutput.run {
             arrayOf(
-                    bindMovieList
-                            .subscribe { weakView.get()?.bindLooknFeel(MovieLooknFeel.BindMovieRecyclerView(transform(it.movieList))) },
-
-                    bindMoreMovieList
-                            .subscribe { weakView.get()?.bindLooknFeel(MovieLooknFeel.BindMoreMovieRecyclerView(transform(it.movieList))) },
-
-                    bindRemovedMovieItem
-                            .subscribe { weakView.get()?.bindLooknFeel(MovieLooknFeel.BindRemovedMovieItem(it.movieItem.toLooknFeel())) },
-
+                    bindLikedMovieList
+                            .subscribe { weakView.get()?.bindLooknFeel(LikeLooknFeel.BindMovieRecyclerView(transform(it.likedMovieList))) },
                     bindUpdateMovieItemList
-                            .subscribe { weakView.get()?.bindLooknFeel(MovieLooknFeel.BindLikedMovieList(transform(it.likedMovieList))) }
+                            .subscribe { weakView.get()?.bindLooknFeel(LikeLooknFeel.BindLikedMovieList(transform(it.likedMovieList))) }
             )
         }
     }
@@ -68,10 +55,8 @@ internal class MoviePresenterCase @Inject constructor(
     private fun subscribeNavigation(): Array<Disposable> {
         return navigationOutput.run {
             arrayOf(
-                    navigateToLikeActivity
-                            .subscribe { weakView.get()?.bindNavigation(MovieNavigation.ToLikeActivity()) },
                     navigateToWebViewActivity
-                            .subscribe { weakView.get()?.bindNavigation(MovieNavigation.ToWebViewActivity(movieLink = it.movieLink)) }
+                            .subscribe { weakView.get()?.bindNavigation(LikeNavigation.ToWebViewActivity(it.movieLink)) }
             )
         }
     }
@@ -80,7 +65,7 @@ internal class MoviePresenterCase @Inject constructor(
         caseProvider.channel().accept(lifecycle)
     }
 
-    override fun onViewAction(viewAction: MovieViewAction) {
+    override fun onViewAction(viewAction: LikeViewAction) {
         caseProvider.channel().accept(viewAction)
     }
 

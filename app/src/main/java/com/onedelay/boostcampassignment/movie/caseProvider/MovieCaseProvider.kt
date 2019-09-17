@@ -9,6 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 
+@Suppress("HasPlatformType")
 internal class MovieCaseProvider @Inject constructor(
                      private val channel: MovieChannelApi,
         @MovieScreen private val compositeDisposable: CompositeDisposable

@@ -1,8 +1,8 @@
 package com.onedelay.boostcampassignment.di.modules
 
 import com.onedelay.boostcampassignment.di.scope.ActivityScope
-import com.onedelay.boostcampassignment.like.LikeActivity
 import com.onedelay.boostcampassignment.like.LikeModule
+import com.onedelay.boostcampassignment.like.view.LikeActivity
 import com.onedelay.boostcampassignment.movie.MovieModule
 import com.onedelay.boostcampassignment.movie.view.MovieActivity
 import dagger.Module

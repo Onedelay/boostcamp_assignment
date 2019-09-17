@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.onedelay.boostcampassignment.movie.view.custom.EntireMovieLayout
-        android:id="@+id/custom_fl_entire_movie"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_movie_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </android.support.v7.widget.LinearLayoutCompat>
