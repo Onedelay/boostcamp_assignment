@@ -1,6 +1,5 @@
 package com.onedelay.boostcampassignment.di
 
-import com.onedelay.boostcampassignment.data.InMemoryDataHolder
 import com.onedelay.boostcampassignment.data.source.RetrofitApi
 import com.onedelay.boostcampassignment.fly.Fly
 import com.onedelay.boostcampassignment.fly.FlyApi
@@ -22,12 +21,6 @@ internal interface ApplicationModule {
         @Singleton
         fun provideRetrofitApi(): RetrofitApi {
             return RetrofitApi
-        }
-
-        @Provides
-        @Singleton
-        fun provideInMemoryDataHolder(): InMemoryDataHolder {
-            return InMemoryDataHolder
         }
     }
 
