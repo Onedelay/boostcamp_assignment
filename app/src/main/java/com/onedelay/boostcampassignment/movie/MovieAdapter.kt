@@ -1,6 +1,5 @@
 package com.onedelay.boostcampassignment.movie
 
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import com.onedelay.boostcampassignment.movie.custom.MovieLayout
 import javax.inject.Inject
 
 
-internal class MovieAdapter @Inject constructor() : RecyclerView.Adapter<MovieViewHolder>() {
+internal class MovieAdapter @Inject constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<MovieViewHolder>() {
 
     companion object {
         const val LIKE_UPDATE = "like_update"

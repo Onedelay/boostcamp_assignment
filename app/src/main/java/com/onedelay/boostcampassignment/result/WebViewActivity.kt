@@ -1,12 +1,12 @@
 package com.onedelay.boostcampassignment.result
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebView.setWebContentsDebuggingEnabled
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.utils.Constants
 import kotlinx.android.synthetic.main.activity_web_view.*

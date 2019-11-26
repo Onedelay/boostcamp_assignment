@@ -3,8 +3,6 @@ package com.onedelay.boostcampassignment.like.view.custom
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -85,7 +83,7 @@ internal class EntireLikeLayout constructor(
     }
 
     private fun initializeRecyclerView() {
-        val linearLayoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
         custom_fl_entire_like.rv_movie_list.apply {
             layoutManager = linearLayoutManager
@@ -94,7 +92,7 @@ internal class EntireLikeLayout constructor(
 
             setHasFixedSize(true)
 
-            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
+            addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, linearLayoutManager.orientation))
         }
 
         adapter.apply {

@@ -1,6 +1,6 @@
 package com.onedelay.boostcampassignment.like
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.onedelay.boostcampassignment.di.scope.ActivityScope
 import com.onedelay.boostcampassignment.like.caseProvider.LikeCaseProvider
 import com.onedelay.boostcampassignment.like.caseProvider.LikeCaseProviderApi

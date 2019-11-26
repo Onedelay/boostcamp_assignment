@@ -3,6 +3,16 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.appdistribution'
+
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath 'com.google.firebase:firebase-appdistribution-gradle:1.2.0'
+    }
+}
 
 android {
     compileSdkVersion 28
@@ -13,7 +23,7 @@ android {
         targetSdkVersion 28
         versionCode buildVersionCode()
         versionName buildVersionName()
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     androidExtensions {
@@ -33,6 +43,12 @@ android {
         debug {
             ext.crashlyticsApiSecret = "910a9d26a1787968a51305361d499e6109b998cfdd138faa23b052cb44dc46a8"
             ext.betaDistributionGroupAliases = "wjy"
+
+            firebaseAppDistribution {
+                serviceCredentialsFile = "./movie-search-a0f1b-3a5ea1f245f8.json"
+                testers                = "wjy0218@gmail.com"
+                group = "안드팀"
+            }
 
             applicationIdSuffix ".debug"
             debuggable true
@@ -65,22 +81,21 @@ android {
     }
 }
 
-def support_library_version = "28.0.0"
 def retrofit_version = "2.4.0"
 def dagger_version = "2.24"
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support:appcompat-v7:$support_library_version"
-    implementation "com.android.support:recyclerview-v7:$support_library_version"
-    implementation "com.android.support:design:$support_library_version"
-    implementation "com.android.support.constraint:constraint-layout:1.1.3"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation "com.google.android.material:material:1.0.0"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation "junit:junit:4.12"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    androidTestImplementation "com.android.support.test:runner:1.0.2"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
     // 이미지 로딩 라이브러리
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -91,7 +106,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:${retrofit_version}"
 
     // RxJava
-    implementation "io.reactivex.rxjava2:rxjava:2.2.5"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.6"
     implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
     implementation "com.jakewharton.rxrelay2:rxrelay:2.1.1"
@@ -107,7 +122,11 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:${dagger_version}"
     kapt "com.google.dagger:dagger-android-processor:${dagger_version}"
 
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+
+    implementation 'com.google.firebase:firebase-analytics:17.2.1'
+    implementation 'com.google.firebase:firebase-core:17.2.1'
+
 }
 
 repositories {
@@ -132,3 +151,5 @@ android.applicationVariants.all { variant ->
     }
     generateResourcesTask.dependsOn generatePropertiesTask
 }
+
+apply plugin: 'com.google.gms.google-services'

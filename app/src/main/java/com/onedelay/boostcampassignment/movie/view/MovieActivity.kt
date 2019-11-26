@@ -2,9 +2,9 @@ package com.onedelay.boostcampassignment.movie.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import com.onedelay.boostcampassignment.ActivityLifeCycleState
 import com.onedelay.boostcampassignment.R
 import com.onedelay.boostcampassignment.like.view.LikeActivity

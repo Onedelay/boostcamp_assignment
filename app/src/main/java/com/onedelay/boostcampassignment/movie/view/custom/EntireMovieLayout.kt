@@ -3,8 +3,6 @@ package com.onedelay.boostcampassignment.movie.view.custom
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -102,7 +100,7 @@ internal class EntireMovieLayout constructor(
     }
 
     private fun initializeRecyclerView() {
-        val linearLayoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
         rv_movie_list.apply {
             layoutManager = linearLayoutManager
@@ -111,7 +109,7 @@ internal class EntireMovieLayout constructor(
 
             setHasFixedSize(true)
 
-            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
+            addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, linearLayoutManager.orientation))
         }
 
         adapter.apply {
