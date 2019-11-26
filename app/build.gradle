@@ -46,8 +46,8 @@ android {
 
             firebaseAppDistribution {
                 serviceCredentialsFile = "./movie-search-a0f1b-3a5ea1f245f8.json"
-                testers                = "wjy0218@gmail.com"
                 group = "안드팀"
+                releaseNotes = "릴리즈노트 테스트 19/11/26 18:25"
             }
 
             applicationIdSuffix ".debug"
